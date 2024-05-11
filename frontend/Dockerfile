@@ -1,11 +1,8 @@
-FROM node:20-alpine
+FROM node:latest
 
-WORKDIR /app
+WORKDIR /app/
 
-COPY package.json package-lock.json /app/
+COPY ./frontend/package.json /app/
+COPY ./frontend/package-lock.json /app/
 
 RUN npm install
-
-COPY . /app/
-
-CMD ["npm", "run", "dev"]
