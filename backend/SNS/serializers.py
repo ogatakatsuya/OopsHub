@@ -4,4 +4,8 @@ from SNS.models import User, Post, Message, Room
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fileds = '__all__'
+        fields = ['content']
+
+    def to_representation(self, instance):
+        # インスタンスの content フィールドの値だけを返す
+        return instance.content

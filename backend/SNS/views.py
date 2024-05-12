@@ -14,4 +14,4 @@ def post_list(request):
     if request.method == 'GET':
         posts = Post.objects.all()
         serializer = PostSerializer(posts,many=True)
-        return JsonResponse(serializer.data,safe=False)
+        return JsonResponse({'message': serializer.data})
