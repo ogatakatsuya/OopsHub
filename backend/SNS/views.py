@@ -17,7 +17,7 @@ def hello(request: WSGIRequest) -> JsonResponse:
 def App(request):
     posts=Post.objects.all()
     serealizer=PostSerializer(posts)
-    posts=[post.message for post in serealizer]
+    posts=[post.content for post in posts]
     if request.method=="GET":
         return JsonResponse({"message":posts})
     if request.method=="POST":

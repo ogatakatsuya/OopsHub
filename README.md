@@ -10,3 +10,6 @@ requirements.txtの変更やpackage.jsonの変更をイメージに反映させ�
 docker-daemon is not runningが出た場合
 
 docker desktopを起動する
+
+backendで修正があったなら、
+`python3 manage.py migrate`

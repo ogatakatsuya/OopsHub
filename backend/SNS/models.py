@@ -10,7 +10,7 @@ class User(models.Model):
         return self.name
 
 class Post(models.Model):
-    text=models.CharField(max_length=100)
+    content=models.CharField(max_length=100)
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_posts")
     created_at=models.DateTimeField()
     def __str__(self):
