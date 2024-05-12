@@ -9,3 +9,4 @@ class PostSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         # インスタンスの content フィールドの値だけを返す
         return instance.content
+

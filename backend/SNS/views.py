@@ -15,3 +15,4 @@ def post_list(request):
         posts = Post.objects.all()
         serializer = PostSerializer(posts,many=True)
         return JsonResponse({'message': serializer.data})
+
