@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
     name=models.CharField(max_length=100)
-    password=models.TextField()
+    password=models.CharField(max_length=100)
     created_at=models.DateTimeField()
     updated_at=models.DateTimeField(null=True)
     def __str__(self):
