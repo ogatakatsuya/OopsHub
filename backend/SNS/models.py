@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    name=models.TextField()
+    name=models.CharField()
     password=models.TextField()
     created_at=models.DateTimeField()
     updated_at=models.DateTimeField(null=True)
@@ -10,7 +10,7 @@ class User(models.Model):
         return self.name
 
 class Post(models.Model):
-    text=models.TextField()
+    text=models.CharField()
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_posts")
     created_at=models.DateTimeField()
     def __str__(self):
@@ -26,7 +26,7 @@ class Room(models.Model):
 class Message(models.Model):
     room_id=models.ForeignKey(Room,on_delete=models.CASCADE,related_name="room_messages")
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_messages")
-    message=models.TextField()
+    message=models.CharField()
     def __str__(self):
         return self.message
     
