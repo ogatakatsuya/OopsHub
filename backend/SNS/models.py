@@ -5,7 +5,7 @@ class User(models.Model):
     name=models.TextField()
     password=models.TextField()
     created_at=models.DateTimeField()
-    updated_at=models.DateTimeField()
+    updated_at=models.DateTimeField(null=True)
 
 class Post(models.Model):
     content=models.TextField()
