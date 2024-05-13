@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from SNS.models import User, Post, Message, Room
 
-class UserSerealizer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields=["id","name","passowrd","created_at","updated_at"]
@@ -28,12 +28,12 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 
-class MessageSerealizer(serializers.ModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model=Message
         fields=["id","user","message","room_id"]
 
-class RoomSerealizer(serializers.ModelSerializer):
+class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model=Room
         fields=["id","created_at","users","name"]
