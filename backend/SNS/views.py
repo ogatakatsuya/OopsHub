@@ -12,7 +12,7 @@ from django.contrib import messages
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
 
-@csrf_exempt
+@csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
 def App(request):
     posts=Post.objects.all()
@@ -50,8 +50,8 @@ def App(request):
             return JsonResponse({"message":"success!"},status=201)
         return JsonResponse(serializer.errors,status=400)
 
-
-def App_modify(request):
+@csrf_exempt # テスト用、実際は外す必要あり
+def App_modify(request,pk):
     posts=Post.objects.all()
     if request.method=="PUT":
         fixed_post=request.data
@@ -65,13 +65,13 @@ def App_modify(request):
             return JsonResponse({"message":"success!"})
         return JsonResponse(serializer.errors,status=400)
     
-    if request.method=="DELETE":
-        delete_post=request.data
-        serializer=PostSerializer(delete_post)
-        if serializer.is_valid():
-            return JsonResponse({"message":"success!"},status=201)
-        return JsonResponse(delete_post.errors,status=400)
-
+    if request.method == "DELETE":
+        try:
+            delete_post = Post.objects.get(pk=pk)
+            delete_post.delete()
+            return JsonResponse({"message": "success!"}, status=204)
+        except Post.DoesNotExist:
+            return JsonResponse({'error': 'Post not found'}, status=404)
 
 ####ここからチャットアプリの実装###
 
