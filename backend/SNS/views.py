@@ -126,10 +126,22 @@ def chat(request):
         return JsonResponse(serializer.errors,status=400)
 
 #APIが要件定義にある
-def chatroom(request):
+def chatroom(request,room_num):
     rooms=Room.objects.all()
     #ルーム内でメッセージを送信
     if request.method=="POST":
         serializer=RoomSerializer(rooms)
-     
-
+    if request.method=="GET":
+        try:
+            room=Room.objects().filter(id=room_num)[0]
+            messages=Message.objects().filter(room_id=room).ordered_by("-id")
+            messages=[message.message for message in messages]
+            return JsonResponse({"message":messages})
+        except BaseException as e:
+            return JsonResponse({"message":"An Error Occure!"})
+    if request.method=="DELETE":
+        delete_message=request.data.copy()
+        serializer=MessageSerializer(data=delete_message)
+        if serializer.is_valid():
+            return JsonResponse({"message":"success!"})
+        return JsonResponse(serializer.errors,status=400)
