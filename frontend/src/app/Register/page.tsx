@@ -1,53 +1,98 @@
-'use client';
+"use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import React, { ChangeEvent } from "react";
-import {Box,Text} from "@chakra-ui/react";
-import { Heading } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
-import { Textarea } from "@chakra-ui/react";
-import { Input } from "@chakra-ui/react"
+import { Input, Button, FormErrorMessage, FormLabel, FormControl } from '@chakra-ui/react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-export default function Home() {
+import { auth } from '../firebase';
 
-let [title, setTitle] = useState("");
-let [text, setText] = useState("");
+type Inputs = {
+  email :string;
+  password : string;
+};
 
-let handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    let inputValue = e.target.value;
-    setText(inputValue);
+const Register = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm<Inputs>()
+
+    const onSubmit : SubmitHandler<Inputs>  = async (data) => {
+        await createUserWithEmailAndPassword(auth, data.email, data.password)
+        .then((userCredential) => {
+                const user = userCredential.user;
+                console.log(user);
+            })
+            .catch((error) => {
+                if(error.code === "auth/email-already-in-use"){
+                    alert("このメールアドレスはすでに使用されています。");
+                }else{
+                    alert(error.message);
+                }
+        });
+    }
+    return (
+        <>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl isInvalid={!!errors.email}>
+                <FormLabel>メールアドレス</FormLabel>
+                <Input
+                placeholder="sample@email.com"
+                _placeholder={{ opacity: "0.3", color: "gray.500" }}
+                size="lg"
+                p={3}
+                bgColor="white"
+                variant="flushed"
+                onSubmit={handleSubmit(onSubmit)}
+                {...register("email", {
+                    required: "メールアドレスは必須です。",
+                    pattern: {
+                        value: /^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/,
+                        message: "不適切なメールアドレスです。"
+                    }
+                })}
+                />
+                <FormErrorMessage>
+                    {errors.email && errors.email.message}
+                </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.password}>
+                <FormLabel>パスワード</FormLabel>
+                <Input
+                placeholder="●●●●●●●●●"
+                _placeholder={{ opacity: "0.3", color: "gray.500" }}
+                size="lg"
+                p={3}
+                bgColor="white"
+                variant="flushed"
+                {...register("password", {
+                    required: "パスワードは必須です。",
+                    minLength: {
+                        value: 6,
+                        message: "パスワードは6文字以上で入力してください。"
+                    }
+                })}
+                />
+                <FormErrorMessage>
+                    {errors.password && errors.password.message}
+                </FormErrorMessage>
+            </FormControl>
+            <Button
+            colorScheme="blue"
+            size="md"
+            bgColor="white"
+            variant="outline"
+            px={7}
+            mt={4}
+            type="submit"
+            isLoading={isSubmitting}
+            >
+            登録
+            </Button>
+        </form>
+        </>
+    )
 }
 
-let handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-}
-  return (
-    <>
-    <Box maxW='32rem'>
-      <Heading mb={4}>失敗談共有アプリ</Heading>
-      <Text fontSize='xl'>
-        失敗談を共有する事ができるアプリです😃
-      </Text>
-      <Text mt="30px" fontSize="l">会員登録</Text>
-      <Text my="8px">ニックネーム：{title}</Text>
-      <Input
-      onChange={handleTitleChange}/>
-      <Text my="8px">パスワード：{title}</Text>
-      <Input
-      onChange={handleTitleChange}/>
-      <Text my="8px">確認用パスワード：{title}</Text>
-      <Input
-      onChange={handleTitleChange}/>
-      <Button 
-      size='lg' 
-      colorScheme='green' 
-      mt='24px'
-      as="a"
-      href="">
-        登録
-      </Button>
-    </Box>
-    </>
-  );
-}
+export default Register;
