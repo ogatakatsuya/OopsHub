@@ -33,7 +33,12 @@ def App(request):
         return JsonResponse(serializer_post.errors, status=400)
         
     if request.method=="PUT":
-        fixed_post=request.data
+        data = request.data.copy()  # リクエストデータのコピーを作成
+        # カラム名を変更
+        data['updated_at'] = data.pop('date', None)
+        data['user'] = data.pop('user_id', None)
+        data['content'] = data.pop('text', None)
+        fixed_post=data
         pre_post=None
         for post in posts:
             if post.id==fixed_post.id:
@@ -52,23 +57,20 @@ def App(request):
         return JsonResponse(serializer.errors,status=400)
 
 @csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["PUT","DELETE"])
 def App_modify(request,pk):
-    posts=Post.objects.all()
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return JsonResponse({'error': 'Post not found'}, status=404)
+    
     if request.method=="PUT":
         data = request.data.copy()  # リクエストデータのコピーを作成
         # カラム名を変更
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
-        serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
-        pre_post = None
-        for post in posts:
-            if post.id==pk:
-                pre_post=post
-                break
-        if not pre_post:
-            return JsonResponse({'error': 'Post not found'}, status=404)
-        serializer = PostSerializer(pre_post, data=fixed_post_data)
-
+        data['content'] = data.pop('text', None)
+        serializer = PostSerializer(post,data=data)  # シリアライザをデータとともにインスタンス化
         if serializer.is_valid():
             serializer.save()
             return JsonResponse({"message": "success!"})
