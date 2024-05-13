@@ -1,17 +1,21 @@
 "use client";
 
-import { Input, Button, FormErrorMessage, FormLabel, FormControl } from '@chakra-ui/react';
+import { Input, Button, FormErrorMessage, Heading, FormLabel, FormControl, Text, Link } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-import { auth } from '../firebase';
+import { auth } from '../../firebase';
+import { useRouter } from 'next/navigation';
 
 type Inputs = {
-  email :string;
-  password : string;
+email :string;
+password : string;
 };
 
 const Register = () => {
+
+    const router = useRouter();
+
     const {
         register,
         handleSubmit,
@@ -22,7 +26,7 @@ const Register = () => {
         await createUserWithEmailAndPassword(auth, data.email, data.password)
         .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
+                router.push("/auth/login");
             })
             .catch((error) => {
                 if(error.code === "auth/email-already-in-use"){
@@ -34,16 +38,13 @@ const Register = () => {
     }
     return (
         <>
+        <Heading mb={4}>新規登録</Heading>
         <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.email}>
                 <FormLabel>メールアドレス</FormLabel>
                 <Input
                 placeholder="sample@email.com"
                 _placeholder={{ opacity: "0.3", color: "gray.500" }}
-                size="lg"
-                p={3}
-                bgColor="white"
-                variant="flushed"
                 onSubmit={handleSubmit(onSubmit)}
                 {...register("email", {
                     required: "メールアドレスは必須です。",
@@ -62,10 +63,6 @@ const Register = () => {
                 <Input
                 placeholder="●●●●●●●●●"
                 _placeholder={{ opacity: "0.3", color: "gray.500" }}
-                size="lg"
-                p={3}
-                bgColor="white"
-                variant="flushed"
                 {...register("password", {
                     required: "パスワードは必須です。",
                     minLength: {
@@ -79,17 +76,20 @@ const Register = () => {
                 </FormErrorMessage>
             </FormControl>
             <Button
-            colorScheme="blue"
-            size="md"
-            bgColor="white"
-            variant="outline"
-            px={7}
+            colorScheme="green"
+            size="lg"
             mt={4}
             type="submit"
             isLoading={isSubmitting}
             >
-            登録
+            新規登録
             </Button>
+            <Text mt={4}>
+                すでにアカウントをお持ちの方はこちら{' '}
+                <Link color='teal.500' href='/auth/login'>
+                    ログインページへ
+                </Link>
+            </Text>
         </form>
         </>
     )

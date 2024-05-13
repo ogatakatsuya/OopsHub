@@ -26,7 +26,7 @@ export default function Home() {
       colorScheme='green' 
       mt='24px'
       as="a"
-      href="/Post">
+      href="/app/post">
         失敗談を投稿する
       </Button>
     </Box>
@@ -35,7 +35,7 @@ export default function Home() {
       colorScheme='green' 
       mt='24px'
       as="a"
-      href="/Register">
+      href="/auth/register">
         会員登録
       </Button>
       <Button 
@@ -43,7 +43,7 @@ export default function Home() {
       colorScheme='green' 
       mt='24px'
       as="a"
-      href="/Login"
+      href="/auth/login"
       mx="8px">
         ログイン
       </Button>
