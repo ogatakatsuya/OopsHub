@@ -21,8 +21,16 @@ def App(request):
     if request.method=="GET":
         return JsonResponse({"message":posts})
     if request.method=="POST":
-        serealizer.save()
-        return JsonResponse({"message":"success!"})
+        data = request.data.copy()  # リクエストデータのコピーを作成
+        # カラム名を変更
+        data['created_at'] = data.pop('date', None)
+        data['user'] = data.pop('user_id', None)
+        serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
+        if serializer_post.is_valid():  # データの検証
+            serializer_post.save()  # データの保存
+            return JsonResponse({"message": "Success!"}, status=201)
+        else:
+            return JsonResponse(serializer_post.errors, status=400)
     if request.method=="PUT":
         fixed_post=request.data
         pre_post=None
@@ -30,7 +38,7 @@ def App(request):
             if post.id==fixed_post.id:
                 pre_post=post
                 break
-        serealizer=PostSerializer(pre_post,data=fixed_post)
+        serializer=PostSerializer(pre_post,data=fixed_post)
         return JsonResponse({"message":"success!"})
     if request.method=="DELETE":
 

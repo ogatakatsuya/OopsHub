@@ -13,10 +13,18 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ["id","text","created_at","user"]
     def create(self,validated_data):
-        text=validated_data.get("text")
-        created_at=validated_data.get("created_at")
-        user=validated_data.get("user")
-        
+        # リクエストのフィールド名を変更
+        content = validated_data.pop('text', validated_data.get('content'))
+        created_at = validated_data.pop('created_at', validated_data.get('date'))
+        user = validated_data.pop('user', validated_data.get('user_id'))
+
+        # 新しいPostインスタンスを作成
+        post = Post.objects.create(
+            content=content,
+            created_at=created_at,
+            user=user
+        )
+        return post
 
 
 
