@@ -7,14 +7,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields=["id","name","passowrd","created_at","updated_at"]
 
 class PostSerializer(serializers.ModelSerializer):
-    text=serializers.CharField()
+    content=serializers.CharField()
     created_at=serializers.DateTimeField(required=False)
     class Meta:
         model = Post
-        fields = ["id","text","created_at","user"]
+        fields = ["id","content","created_at","user"]
     def create(self,validated_data):
         # リクエストのフィールド名を変更
-        content = validated_data.pop('text', validated_data.get('content'))
+        content = validated_data.pop('content', validated_data.get('content'))
         created_at = validated_data.pop('created_at', validated_data.get('date'))
         user = validated_data.pop('user', validated_data.get('user_id'))
 

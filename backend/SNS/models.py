@@ -14,7 +14,7 @@ class Post(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_posts")
     created_at=models.DateTimeField()
     def __str__(self):
-        return self.text
+        return self.content
 
 class Room(models.Model):
     created_at=models.DateTimeField()
