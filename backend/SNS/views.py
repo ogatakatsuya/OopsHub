@@ -25,6 +25,7 @@ def App(request):
         # カラム名を変更
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
+        data['content'] = data.pop('text', None)
         serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_post.is_valid():  # データの検証
             serializer_post.save()  # データの保存
@@ -54,16 +55,24 @@ def App(request):
 def App_modify(request,pk):
     posts=Post.objects.all()
     if request.method=="PUT":
-        fixed_post=request.data
-        pre_post=None
+        data = request.data.copy()  # リクエストデータのコピーを作成
+        # カラム名を変更
+        data['created_at'] = data.pop('date', None)
+        data['user'] = data.pop('user_id', None)
+        serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
+        pre_post = None
         for post in posts:
-            if post.id==fixed_post.id:
+            if post.id==pk:
                 pre_post=post
                 break
-        serializer=PostSerializer(pre_post,data=fixed_post)
+        if not pre_post:
+            return JsonResponse({'error': 'Post not found'}, status=404)
+        serializer = PostSerializer(pre_post, data=fixed_post_data)
+
         if serializer.is_valid():
-            return JsonResponse({"message":"success!"})
-        return JsonResponse(serializer.errors,status=400)
+            serializer.save()
+            return JsonResponse({"message": "success!"})
+        return JsonResponse(serializer.errors, status=400)
     
     if request.method == "DELETE":
         try:
