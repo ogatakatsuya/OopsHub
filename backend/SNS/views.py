@@ -13,7 +13,7 @@ def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
 
 @csrf_exempt # テスト用、実際は外す必要あり
-@api_view(["GET","POST","Update","Delete"])
+@api_view(["GET","POST","PUT","Delete"])#HTTP methodsしか入れられない（Updateはなかった）
 def App(request):
     posts=Post.objects.all()
     posts=[post.content for post in posts]
@@ -92,7 +92,8 @@ def chat(request):
     rooms=Room.objects.all()
     rooms=[room for room in rooms]
     if request.method=="GET":
-        return JsonResponse({"message":rooms["id"]})
+        room_ids=[room.id for room in rooms]
+        return JsonResponse({"message":room_ids})
     
     if request.method=="POST":
         data = request.data.copy()  # リクエストデータのコピーを作成
