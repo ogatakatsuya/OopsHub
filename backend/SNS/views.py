@@ -56,6 +56,7 @@ def App(request):
             return JsonResponse({"message":"success!"},status=201)
         return JsonResponse(serializer.errors,status=400)
 
+#投稿
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["PUT","DELETE"])
 def App_modify(request,pk):
@@ -87,12 +88,14 @@ def App_modify(request,pk):
 ####ここからチャットアプリの実装###
 
 
-#APIが要件定義にないもの
-def chat(request):
-    rooms=Room.objects.all()
+#チャットルームのリスト
+@api_view(["PUT","DELETE","GET","POST"])
+def chatrooms(request):
+    user=request.data
+    rooms=Room.objects.filter(users=user)
     rooms=[room for room in rooms]
     if request.method=="GET":
-        room_ids=[room.id for room in rooms]
+        room_ids=[room.id for room in rooms]#名前で返す
         return JsonResponse({"message":room_ids})
     
     if request.method=="POST":
@@ -100,6 +103,7 @@ def chat(request):
         # カラム名を変更
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
+        data["name"]=data.pop("name")
         serializer_post = RoomSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_post.is_valid():  # データの検証
             serializer_post.save()  # データの保存
@@ -126,8 +130,9 @@ def chat(request):
             return JsonResponse({"message":"success!"},status=201)
         return JsonResponse(serializer.errors,status=400)
 
-#APIが要件定義にある
-def chatroom(request,room_num):
+#チャットルーム
+@api_view(["POST","DELETE","GET"])
+def chat(request,room_num):
     rooms=Room.objects.all()
     #ルーム内でメッセージを送信
     if request.method=="POST":
@@ -140,6 +145,7 @@ def chatroom(request,room_num):
             return JsonResponse({"message":messages})
         except BaseException as e:
             return JsonResponse({"message":"An Error Occure!"})
+    
     if request.method=="DELETE":
         delete_message=request.data.copy()
         serializer=MessageSerializer(data=delete_message)
