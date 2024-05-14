@@ -4,13 +4,19 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework import generics
-from SNS.models import User, Post, Message, Room
+from SNS.models import User, Post, Message, Room, Like
 from SNS.serializers import PostSerializer,UserSerializer,MessageSerializer,RoomSerializer
 import json
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
+from rest_framework import status
+from rest_framework.response import Response
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
+
+
+### CRUD機能 ###
 
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
@@ -83,6 +89,41 @@ def App_modify(request,pk):
             return JsonResponse({"message": "success!"}, status=204)
         except Post.DoesNotExist:
             return JsonResponse({'error': 'Post not found'}, status=404)
+
+###いいね機能###
+
+@csrf_exempt
+@api_view(['GET','POST','DELETE'])
+def like_create_destroy(request, post_id):
+    
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'GET':
+        serializer = PostSerializer(post)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        user_id = request.data.get('user')
+        if not user_id:
+            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(User, id=user_id)
+        like, created = Like.objects.get_or_create(user=user, post=post)
+        if created:
+            return Response({"message": "Like created"}, status=status.HTTP_201_CREATED)
+        return Response({"message": "Like already exists"}, status=status.HTTP_200_OK)
+
+    elif request.method == 'DELETE':
+        user_id = request.data.get('user')
+        if not user_id:
+            return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        user = get_object_or_404(User, id=user_id)
+        like = Like.objects.filter(user=user, post=post)
+        if like.exists():
+            like.delete()
+            return Response({"message": "Like deleted"},status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Like does'nt exist"},status=status.HTTP_404_NOT_FOUND)
+    
 
 ####ここからチャットアプリの実装###
 
