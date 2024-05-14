@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .views import  like_create_destroy
 from .views import LikeCreateDestroyView, DontMindCreateDestroyView
 
 
