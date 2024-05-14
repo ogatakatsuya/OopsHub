@@ -30,12 +30,23 @@ class Message(models.Model):
     def __str__(self):
         return self.message
     
-class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
 
+
+class Button(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     class Meta:
+        abstract = True
         unique_together = ('user', 'post')
 
     def __str__(self):
+        pass
+
+class Like(Button):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='likes')
+    def __str__(self):
         return f'{self.user} liked {self.post}'
+
+class DontMind(Button):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='dont_minds')
+    def __str__(self):
+        return f'{self.user} cheeruped {self.post}'

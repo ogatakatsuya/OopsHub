@@ -5,12 +5,13 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework import generics
 from SNS.models import User, Post, Message, Room, Like
-from SNS.serializers import PostSerializer,UserSerializer,MessageSerializer,RoomSerializer
 import json
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
+from .models import Post, Like, DontMind
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, RoomSerializer
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -91,7 +92,55 @@ def App_modify(request,pk):
             return JsonResponse({'error': 'Post not found'}, status=404)
 
 ###いいね機能###
+class ButtonCreateDestroyView(generics.GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        user_id = request.data.get('user')
+        user = get_object_or_404(User, id=user_id)
+        post_id = self.kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        
+        # 既存のインスタンスをチェック
+        instance = self.get_model().objects.filter(user=user, post=post).first()
+        if instance:
+            return Response({"message": f"{self.get_model().__name__} already exists"}, status=status.HTTP_200_OK)
+        
+        # データのシリアライズとバリデーション
+        data = {'user': user.id, 'post': post.id}
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        
+        # データの保存
+        instance = self.get_model().objects.create(user=user, post=post)
+        return Response({"message": f"{self.get_model().__name__} created"}, status=status.HTTP_201_CREATED)
 
+    def delete(self, request, *args, **kwargs):
+        user = request.data.get('user')
+        post_id = self.kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        instance = self.get_model().objects.filter(user=user, post=post).first()
+        if instance:
+            instance.delete()
+            return Response({"message": f"{self.get_model().__name__} deleted"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": f"{self.get_model().__name__} doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, *args, **kwargs):
+        post_id = self.kwargs.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        serializer = PostSerializer(post)
+        return Response({"likes": serializer.data['likes']}, status=status.HTTP_200_OK)
+
+class LikeCreateDestroyView(ButtonCreateDestroyView):
+    serializer_class = LikeSerializer
+
+    def get_model(self):
+        return Like
+
+class DontMindCreateDestroyView(ButtonCreateDestroyView):
+    serializer_class = DontMindSerializer
+
+    def get_model(self):
+        return DontMind
+    
 @csrf_exempt
 @api_view(['GET','POST','DELETE'])
 def like_create_destroy(request, post_id):
