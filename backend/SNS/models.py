@@ -11,8 +11,8 @@ class User(models.Model):
 
 class Post(models.Model):
     content=models.CharField(max_length=100)
-    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_posts")
-    created_at=models.DateTimeField()
+    user=models.CharField(max_length=50)
+    created_at=models.CharField(max_length=100)
     def __str__(self):
         return self.content
 

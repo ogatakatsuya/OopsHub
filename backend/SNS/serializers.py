@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     content=serializers.CharField()
-    created_at=serializers.DateTimeField()
+    created_at=serializers.CharField()
     likes = serializers.SerializerMethodField()
     dont_minds = serializers.SerializerMethodField()
     class Meta:
