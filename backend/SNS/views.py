@@ -100,7 +100,7 @@ def like_create_destroy(request, post_id):
 
     if request.method == 'GET':
         serializer = PostSerializer(post)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"likes":serializer.data['likes']}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         user_id = request.data.get('user')
