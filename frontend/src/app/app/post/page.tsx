@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input, Button, FormErrorMessage, FormLabel, Heading, FormControl, Text, Textarea } from '@chakra-ui/react';
 import { auth } from "../../firebase";
+import ApiButton from "@/app/components/ApiButton";
 import { create } from "domain";
 
 type Inputs = {
@@ -83,9 +84,10 @@ export default function Home() {
           type="submit"
           isLoading={isSubmitting}
         >
-          投稿
+        AIに相談する
         </Button>
       </form>
+      <ApiButton />
     </>
   );
 }
