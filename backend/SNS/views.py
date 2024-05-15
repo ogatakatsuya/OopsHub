@@ -26,7 +26,11 @@ def App(request):
     
     if request.method=="GET":
         serializer_get = PostListSerializer(posts, many=True)
-        return Response({"message": serializer_get.data})
+        posts = serializer_get.data
+        for post in posts:
+            post['text'] = post.pop('content', None)
+            post['dontminds'] = post.pop('dont_minds', None)
+        return Response({"message": posts})
     
     if request.method=="POST":
         data = request.data.copy()  # リクエストデータのコピーを作成
