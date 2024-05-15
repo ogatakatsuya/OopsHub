@@ -99,8 +99,7 @@ def App_modify(request,pk):
 ###いいね機能###
 class ButtonCreateDestroyView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
-        user_id = request.data.get('user')
-        user = get_object_or_404(User, id=user_id)
+        user = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         post = get_object_or_404(Post, id=post_id)
         
@@ -110,7 +109,7 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
             return Response({"message": f"{self.get_model().__name__} already exists"}, status=status.HTTP_200_OK)
         
         # データのシリアライズとバリデーション
-        data = {'user': user.id, 'post': post.id}
+        data = {'user': user, 'post': post.id}
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         
