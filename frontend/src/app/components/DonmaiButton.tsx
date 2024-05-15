@@ -7,10 +7,12 @@ import { auth } from "../firebase";
 
 interface LikeButtonProps {
     post_id: number;
+    dontminds: number;
 }
 
-const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id }) => {
+const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id, dontminds }) => {
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [dontmindsNum, setDontmindsNum] = useState(dontminds);
     const user_id = auth.currentUser?.uid;
     const like = async () => {
         try {
@@ -28,6 +30,7 @@ const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id }) => {
             } else {
             const data = await res.json();
             console.log(data);
+            setDontmindsNum(data.dont_minds);
             setSubmitError(null); // 成功時に以前のエラーをクリア
             }
         } catch (err) {
@@ -37,6 +40,7 @@ const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id }) => {
     }
     return (
         <>
+        <span>{dontmindsNum}</span>
         <Button mr={3} size='xs' onClick={like}>どんまい</Button>
         {submitError && (
         <Text color="red.500" mt={2}>

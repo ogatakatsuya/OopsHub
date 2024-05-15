@@ -8,6 +8,7 @@ import ShowIndex from "./components/Index";
 import Logout from "./components/Logout";
 
 import { useAuthContext } from "@/auth_provider/AuthProvider";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { user } = useAuthContext();

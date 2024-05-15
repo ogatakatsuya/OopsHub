@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Card, CardHeader, Heading, CardBody, Stack, StackDivider, Box, Text } from "@chakra-ui/react";
+import { Card, Flex, Avatar, CardHeader, Heading, CardBody, Stack, StackDivider, Box, Text } from "@chakra-ui/react";
 import { useAuthContext } from "@/auth_provider/AuthProvider";
 import LikeButton from "./LikeButton";
 import DonmaiButton from "./DonmaiButton";
@@ -40,15 +40,26 @@ export default function ShowIndex(){
             <Stack divider={<StackDivider />} spacing='4'>
             {value.map((item, index) => (
                 <Box key={item["id"]}>
-                    <Text pt='2' fontSize='sm'>
+                    <Flex alignItems={'start'} mb={4}>
+                    <Avatar />
+                    <Box ml={2}>
+                        <Text bgColor={'gray.200'} rounded={'md'} px={2} py={1}>
                         {item["text"]}
-                    </Text>
+                        </Text>
+                    </Box>
+                    </Flex>
+                    <Flex alignItems={'start'}>
+                    <Box mr={2}>
+                        <Text bgColor={'gray.200'} rounded={'md'} px={2} py={1}>
+                        {item["text"]}
+                        </Text>
+                    </Box>
+                    <Avatar/>
+                    </Flex>
                     <Text fontSize='sm' my={4}>{item["created_at"]}</Text>
                     {user && <>
-                    <span>{item["likes"]}</span>
-                    <LikeButton post_id={item["id"]}/>
-                    <span>{item["dontminds"]}</span>
-                    <DonmaiButton post_id={item["id"]}/>
+                    <DonmaiButton post_id={item["id"]} dontminds={item["dontminds"]}/>
+                    <LikeButton post_id={item["id"]} likes={item["likes"]}/>
                     <WaraButton />
                     </>}
                 </Box>
