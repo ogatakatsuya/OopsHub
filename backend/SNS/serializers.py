@@ -50,14 +50,14 @@ class RoomSerializer(serializers.ModelSerializer):
         fields=["id","created_at","users","name"]
 
 class LikeSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.CharField()
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
     class Meta:
         model = Like
         fields = ['id', 'user', 'post']
 
 class DontMindSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user = serializers.CharField()
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
     class Meta:
         model = DontMind

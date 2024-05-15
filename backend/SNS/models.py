@@ -33,7 +33,7 @@ class Message(models.Model):
 
 
 class Button(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.CharField(max_length=50)
     class Meta:
         abstract = True
         unique_together = ('user', 'post')
