@@ -34,6 +34,9 @@ class PostSerializer(serializers.ModelSerializer):
     def get_dont_minds(self, obj):
         return obj.dont_minds.count()
 
+class PostListSerializer(PostSerializer):
+    class Meta(PostSerializer.Meta):
+        fields = ["id", "content", "created_at", "likes", "dont_minds"] 
 
 
 class MessageSerializer(serializers.ModelSerializer):

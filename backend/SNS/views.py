@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, RoomSerializer
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, RoomSerializer,PostListSerializer
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -23,9 +23,10 @@ def hello(request: WSGIRequest) -> JsonResponse:
 @api_view(["GET","POST","Update","Delete"])
 def App(request):
     posts=Post.objects.all()
-    posts=[post.content for post in posts]
+    
     if request.method=="GET":
-        return JsonResponse({"message":posts})
+        serializer_get = PostListSerializer(posts, many=True)
+        return Response({"message": serializer_get.data})
     
     if request.method=="POST":
         data = request.data.copy()  # リクエストデータのコピーを作成
