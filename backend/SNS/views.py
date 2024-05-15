@@ -98,6 +98,10 @@ def App_modify(request,pk):
 
 ###いいね機能###
 class ButtonCreateDestroyView(generics.GenericAPIView):
+
+    def get_model(self):
+        raise NotImplementedError("Subclasses must implement this method.")
+    
     def post(self, request, *args, **kwargs):
         user = request.data.get('user')
         post_id = self.kwargs.get('post_id')
@@ -106,7 +110,8 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
         # 既存のインスタンスをチェック
         instance = self.get_model().objects.filter(user=user, post=post).first()
         if instance:
-            return Response({"message": f"{self.get_model().__name__} already exists"}, status=status.HTTP_200_OK)
+            count = getattr(post, self.field_name).count()
+            return Response({"message": f"{self.get_model().__name__} already exists", self.field_name: count}, status=status.HTTP_200_OK)
         
         # データのシリアライズとバリデーション
         data = {'user': user, 'post': post.id}
@@ -115,7 +120,9 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
         
         # データの保存
         instance = self.get_model().objects.create(user=user, post=post)
-        return Response({"message": f"{self.get_model().__name__} created"}, status=status.HTTP_201_CREATED)
+        count = getattr(post, self.field_name).count()
+        return Response({"message": f"{self.get_model().__name__} created", self.field_name: count}, status=status.HTTP_201_CREATED)
+    
 
     def delete(self, request, *args, **kwargs):
         user = request.data.get('user')
@@ -124,8 +131,10 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
         instance = self.get_model().objects.filter(user=user, post=post).first()
         if instance:
             instance.delete()
-            return Response({"message": f"{self.get_model().__name__} deleted"}, status=status.HTTP_204_NO_CONTENT)
-        return Response({"message": f"{self.get_model().__name__} doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+            count = getattr(post, self.field_name).count()
+            return Response({"message": f"{self.get_model().__name__} deleted", self.field_name: count}, status=status.HTTP_204_NO_CONTENT)
+        count = getattr(post, self.field_name).count()
+        return Response({"message": f"{self.get_model().__name__} doesn't exist", self.field_name: count}, status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, *args, **kwargs):
         if self.field_name is None:
