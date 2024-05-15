@@ -29,8 +29,6 @@ export default function Home() {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     const created_at = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-    let num = 2;
-    console.log(value.text,user_id,created_at)
 
     try {
       const res = await fetch("http://localhost:8000/post/", { // ポート番号を修正
