@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { Card, CardHeader, Heading, CardBody, Stack, StackDivider, Box, Text } from "@chakra-ui/react";
-
+import { useAuthContext } from "@/auth_provider/AuthProvider";
 import LikeButton from "./LikeButton";
 import DonmaiButton from "./DonmaiButton";
 import WaraButton from "./WaraButton";
 
 export default function ShowIndex(){
     const [value, setValue] = useState([]);
+    const { user } = useAuthContext();
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -43,11 +44,13 @@ export default function ShowIndex(){
                         {item["text"]}
                     </Text>
                     <Text fontSize='sm' my={4}>{item["created_at"]}</Text>
+                    {user && <>
                     <span>{item["likes"]}</span>
                     <LikeButton post_id={item["id"]}/>
                     <span>{item["dontminds"]}</span>
-                    <DonmaiButton/>
+                    <DonmaiButton post_id={item["id"]}/>
                     <WaraButton />
+                    </>}
                 </Box>
             ))}
             </Stack>

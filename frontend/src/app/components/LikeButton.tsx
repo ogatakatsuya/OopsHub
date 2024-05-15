@@ -1,7 +1,9 @@
 "use client";
 
-import { Button } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { useState } from "react";
+
+import { auth } from "../firebase";
 
 interface LikeButtonProps {
     post_id: number;
@@ -9,6 +11,7 @@ interface LikeButtonProps {
 
 const LikeButton: React.FC<LikeButtonProps> = ({ post_id }) => {
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const user_id = auth.currentUser?.uid;
     const like = async () => {
         try {
             const res = await fetch(`http://localhost:8000/like/${post_id}/`, { // ポート番号を修正
@@ -16,7 +19,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({  }),
+            body: JSON.stringify({ user: user_id }),
             });
     
             if (!res.ok) {
@@ -35,6 +38,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id }) => {
     return (
         <>
         <Button mr={3} size='xs' onClick={like}>いいね</Button>
+        {submitError && (
+        <Text color="red.500" mt={2}>
+            {submitError}
+        </Text>
+        )}
         </>
     )
 }
