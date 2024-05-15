@@ -38,12 +38,14 @@ export default function ShowIndex(){
         <CardBody>
             <Stack divider={<StackDivider />} spacing='4'>
             {value.map((item, index) => (
-                <Box key={index}>
+                <Box key={item["id"]}>
                     <Text pt='2' fontSize='sm'>
-                        {item}
+                        {item["text"]}
                     </Text>
-                    <Text fontSize='sm'>date</Text>
-                    <LikeButton />
+                    <Text fontSize='sm' my={4}>{item["created_at"]}</Text>
+                    <span>{item["likes"]}</span>
+                    <LikeButton post_id={item["id"]}/>
+                    <span>{item["dontminds"]}</span>
                     <DonmaiButton/>
                     <WaraButton />
                 </Box>
