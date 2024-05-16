@@ -103,19 +103,35 @@ def App_modify(request,pk):
 class LLMView(generics.GenericAPIView):
 
     def get(self, request):
+        # ユーザーからの失敗談を取得
+        failure_story = request.data.get('text', '')
+
+        # データの検証
+        if not failure_story:
+            return Response({"error": "No failure story provided."}, status=status.HTTP_400_BAD_REQUEST)
+
         # 質問の形式を指定
-        question = "Please tell me one famous sentence which cheers up people's life ,and person who made it.\
-                    Sentence should be 15 words . Answer-Template is (the saying)-(person name)"
+        question = f"次の失敗について：「{failure_story}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
+
         # .envファイルの読み込み
         load_dotenv()
-        
-        # API-KEYの設定
-        OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-        response = completion(
-            model="gpt-3.5-turbo",
-            messages=[{"content": question, "role": "user"}],
-        )
+        """
+        model=
+
+        "openrouter/openchat/openchat-7b:free"  # 無料
+        "gpt-3.5-turbo"
+        "gpt-4o"
+
+        """
+
+        try:
+            response = completion(
+                model="openrouter/openchat/openchat-7b:free",
+                messages=[{"content": question, "role": "user"}],
+            ) # API KEYは.envで設定されている
+        except Exception as e:
+            return Response({"error": "Error processing your request.", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({"solution":response["choices"][0]['message']['content']}, status=status.HTTP_200_OK)
 
