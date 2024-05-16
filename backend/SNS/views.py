@@ -12,6 +12,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, RoomSerializer,PostListSerializer
+import os
+from dotenv import load_dotenv
+from litellm import completion
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -96,7 +99,28 @@ def App_modify(request,pk):
         except Post.DoesNotExist:
             return JsonResponse({'error': 'Post not found'}, status=404)
 
-###いいね機能###
+###AIとのやり取り###
+class LLMView(generics.GenericAPIView):
+
+    def get(self, request):
+        # 質問の形式を指定
+        question = "Please tell me one famous sentence which cheers up people's life ,and person who made it.\
+                    Sentence should be 15 words . Answer-Template is (the saying)-(person name)"
+        # .envファイルの読み込み
+        load_dotenv()
+        
+        # API-KEYの設定
+        OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
+        response = completion(
+            model="gpt-3.5-turbo",
+            messages=[{"content": question, "role": "user"}],
+        )
+
+        return Response({"solution":response["choices"][0]['message']['content']}, status=status.HTTP_200_OK)
+
+
+###ボタン機能(いいね(likes),ドンマイ(dontmind),ためになった(learned))###
 class ButtonCreateDestroyView(generics.GenericAPIView):
 
     def get_model(self):
