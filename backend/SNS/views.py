@@ -98,8 +98,6 @@ def App_modify(request,pk):
 
 ###いいね機能###
 class ButtonCreateDestroyView(generics.GenericAPIView):
-    def __init__(self,format):
-        self.format=format
 
     def get_model(self):
         raise NotImplementedError("Subclasses must implement this method.")
