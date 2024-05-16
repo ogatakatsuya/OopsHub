@@ -26,6 +26,9 @@ export default function Home() {
     <Button size='lg' colorScheme='green' my='24px' as="a" href="/app/post">
       失敗談を投稿する
     </Button>
+    <Button size='lg' colorScheme="green" mx='10px' as="a" href="/app/contest">
+      失敗談コンテストに参加する
+    </Button>
     <Logout/>
     </>
     : <>
