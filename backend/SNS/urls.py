@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import LikeCreateDestroyView, DontMindCreateDestroyView
+from .views import LikeCreateDestroyView, DontMindCreateDestroyView,LearnedCreateDestroyView
 
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path("chat/<int:room_num>",views.chatroom,name="chatroom"),
     path('like/<int:post_id>/',  LikeCreateDestroyView.as_view(), name='like-create-destroy'),
     path('dontmind/<int:post_id>/', DontMindCreateDestroyView.as_view(), name='dontmind-create-destroy'),
+    path('learned/<int:post_id>/', LearnedCreateDestroyView.as_view(), name='learned-create-destroy'),
 ]
