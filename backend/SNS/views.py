@@ -225,7 +225,7 @@ def contest(request):
     if request.method=="GET":
         serializer_get = ContestSerializer(contests, many=True)
         contests = serializer_get.data
-        return Response({"message": contests})
+        return Response({"message": "hello world"})
     
     if request.method=="POST":
         data=request.data.copy()
