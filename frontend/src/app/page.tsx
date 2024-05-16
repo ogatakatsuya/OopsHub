@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useState } from "react";
 import {Box,Text} from "@chakra-ui/react";
 import { Heading } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
-import { auth } from "./firebase"
 
 import ShowIndex from "./components/Index";
 import Logout from "./components/Logout";
 
+import { useAuthContext } from "@/auth_provider/AuthProvider";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+  const { user } = useAuthContext();
   return (
     <>
     <Box maxW='32rem'>
@@ -18,12 +20,14 @@ export default function Home() {
         失敗談を共有する事ができるアプリです😃
       </Text>
       <ShowIndex></ShowIndex>
-      <Button size='lg' colorScheme='green' my='24px' as="a" href="/app/post">
-        失敗談を投稿する
-      </Button>
     </Box>
-    { auth 
-    ? <Logout/>
+    { user
+    ? <>
+    <Button size='lg' colorScheme='green' my='24px' as="a" href="/app/post">
+      失敗談を投稿する
+    </Button>
+    <Logout/>
+    </>
     : <>
     <Button size='lg' colorScheme='green' my='24px'as="a"href="/auth/register">
     会員登録
