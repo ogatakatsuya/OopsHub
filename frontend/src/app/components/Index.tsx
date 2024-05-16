@@ -59,8 +59,8 @@ export default function ShowIndex(){
                     <Text fontSize='sm' my={4}>{item["created_at"]}</Text>
                     {user && <>
                     <DonmaiButton post_id={item["id"]} dontminds={item["dontminds"]}/>
-                    <LikeButton post_id={item["id"]} likes={item["likes"]}/>
-                    <WaraButton />
+                    <LikeButton post_id={item["id"]} learneds={item["learneds"]}/>
+                    <WaraButton post_id={item["id"]} likes={item["likes"]}/>
                     </>}
                 </Box>
             ))}
