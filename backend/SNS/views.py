@@ -220,6 +220,8 @@ class LearnedCreateDestroyView(ButtonCreateDestroyView):
         return Learned
 
 ####ここからチャットアプリの実装###
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["GET","POST","Update","Delete"])
 def contest(request):
     contests=Contest.objects.all()
     if request.method=="GET":
@@ -241,10 +243,12 @@ def contest(request):
         if serializer.is_valid():    #データ検証
             return JsonResponse({"message":"success"},status=201)
         return JsonResponse(serializer.errors,status=400)
-    
+
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["GET","POST","Update","Delete"])
 def contestroom(request,contest_id):
     try:
-        contest = Post.objects.get(id=contest_id)
+        contest = Contest.objects.get(id=contest_id)
     except Post.DoesNotExist:
         return JsonResponse({'error': 'Contest not found'}, status=404)
     
