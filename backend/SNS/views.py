@@ -12,6 +12,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, RoomSerializer,PostListSerializer
+import os
+from dotenv import load_dotenv
+from litellm import completion
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -96,7 +99,44 @@ def App_modify(request,pk):
         except Post.DoesNotExist:
             return JsonResponse({'error': 'Post not found'}, status=404)
 
-###いいね機能###
+###AIとのやり取り###
+class LLMView(generics.GenericAPIView):
+
+    def get(self, request):
+        # ユーザーからの失敗談を取得
+        failure_story = request.data.get('text', '')
+
+        # データの検証
+        if not failure_story:
+            return Response({"error": "No failure story provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 質問の形式を指定
+        question = f"次の失敗について：「{failure_story}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
+
+        # .envファイルの読み込み
+        load_dotenv()
+
+        """
+        model=
+
+        "openrouter/openchat/openchat-7b:free"  # 無料
+        "gpt-3.5-turbo"
+        "gpt-4o"
+
+        """
+
+        try:
+            response = completion(
+                model="openrouter/openchat/openchat-7b:free",
+                messages=[{"content": question, "role": "user"}],
+            ) # API KEYは.envで設定されている
+        except Exception as e:
+            return Response({"error": "Error processing your request.", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"solution":response["choices"][0]['message']['content']}, status=status.HTTP_200_OK)
+
+
+###ボタン機能(いいね(likes),ドンマイ(dontmind),ためになった(learned))###
 class ButtonCreateDestroyView(generics.GenericAPIView):
 
     def get_model(self):
