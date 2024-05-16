@@ -98,6 +98,8 @@ def App_modify(request,pk):
 
 ###いいね機能###
 class ButtonCreateDestroyView(generics.GenericAPIView):
+    def __init__(self,format):
+        self.format=format
 
     def get_model(self):
         raise NotImplementedError("Subclasses must implement this method.")
@@ -105,7 +107,7 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         user = request.data.get('user')
         post_id = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
+        post = get_object_or_404(self.format, id=post_id)
         
         # 既存のインスタンスをチェック
         instance = self.get_model().objects.filter(user=user, post=post).first()
@@ -127,7 +129,7 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
     def delete(self, request, *args, **kwargs):
         user = request.data.get('user')
         post_id = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
+        post = get_object_or_404(self.format, id=post_id)
         instance = self.get_model().objects.filter(user=user, post=post).first()
         if instance:
             instance.delete()
@@ -141,30 +143,30 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
             return Response({"error": "Field name not set"}, status=status.HTTP_400_BAD_REQUEST)
 
         post_id = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
+        post = get_object_or_404(self.format, id=post_id)
         serializer = PostSerializer(post)
         return Response({self.field_name: serializer.data[self.field_name]}, status=status.HTTP_200_OK)
 
 class LikeCreateDestroyView(ButtonCreateDestroyView):
     serializer_class = LikeSerializer
     field_name = 'likes'
-
+    format=Post
     def get_model(self):
         return Like
 
 class DontMindCreateDestroyView(ButtonCreateDestroyView):
     serializer_class = DontMindSerializer
     field_name = 'dont_minds'
-
+    format=Post
     def get_model(self):
         return DontMind
     
 class VoteCreateDestroyView(ButtonCreateDestroyView):
     serializer_class = LikeSerializer
     field_name = 'likes'
-
+    format=Contest_Post
     def get_model(self):
-        return Like
+        return Vote
 
 ####コンテスト###
 def contest(request):
