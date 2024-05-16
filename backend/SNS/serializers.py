@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from SNS.models import User, Post, Message, Room, Like, DontMind
+from SNS.models import User, Post, Like, DontMind,Contest_Post,Contest
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,15 +39,15 @@ class PostListSerializer(PostSerializer):
         fields = ["id", "content", "created_at", "likes", "dont_minds"] 
 
 
-class MessageSerializer(serializers.ModelSerializer):
+class ContestSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Message
-        fields=["id","user","message","room_id"]
+        model=Contest
+        fields=["id","created_at","name"]
 
-class RoomSerializer(serializers.ModelSerializer):
+class Contest_PostSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Room
-        fields=["id","created_at","users","name"]
+        model=Contest_Post
+        fields=["contest_id","user_id","id","message"]
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
@@ -59,6 +59,13 @@ class LikeSerializer(serializers.ModelSerializer):
 class DontMindSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+    class Meta:
+        model = DontMind
+        fields = ['id', 'user', 'post']
+
+class VoteSerializer(serializers.ModelSerializer):
+    user = serializers.CharField()
+    post = serializers.PrimaryKeyRelatedField(queryset=Contest_Post.objects.all())
     class Meta:
         model = DontMind
         fields = ['id', 'user', 'post']
