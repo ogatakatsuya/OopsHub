@@ -16,16 +16,15 @@ class Post(models.Model):
     def __str__(self):
         return self.content
 
-class Room(models.Model):
-    created_at=models.DateTimeField()
-    users=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_rooms")
-    name=models.CharField(max_length=100)
+class Contest(models.Model):
+    created_at=models.CharField(max_length=50)
+    name=models.CharField(max_length=50)
     def __str__(self):
         return self.name
 
-class Message(models.Model):
-    room_id=models.ForeignKey(Room,on_delete=models.CASCADE,related_name="room_messages")
-    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_messages")
+class Contest_Post(models.Model):
+    contest_id=models.CharField(max_length=50)
+    user_id=models.CharField(max_length=50)
     message=models.CharField(max_length=100)
     def __str__(self):
         return self.message
@@ -50,7 +49,12 @@ class DontMind(Button):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='dont_minds')
     def __str__(self):
         return f'{self.user} cheeruped {self.post}'
-     
+
+class Vote(Button):
+    post = models.ForeignKey(Contest_Post, on_delete=models.CASCADE,related_name='dont_minds')
+    def __str__(self):
+        return f'{self.user} cheeruped {self.post}'
+ 
 class Learned(Button):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='learneds')
     def __str__(self):
