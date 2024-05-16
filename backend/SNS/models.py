@@ -50,3 +50,9 @@ class DontMind(Button):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='dont_minds')
     def __str__(self):
         return f'{self.user} cheeruped {self.post}'
+     
+class Learned(Button):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='learneds')
+    def __str__(self):
+        return f'{self.user} Learned from {self.post}' # 文法合ってる？
+    

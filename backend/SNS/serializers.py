@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from SNS.models import User, Post, Message, Room, Like, DontMind
+from SNS.models import User, Post, Message, Room, Like, DontMind,Learned
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,9 +11,10 @@ class PostSerializer(serializers.ModelSerializer):
     created_at=serializers.CharField()
     likes = serializers.SerializerMethodField()
     dont_minds = serializers.SerializerMethodField()
+    learneds = serializers.SerializerMethodField()
     class Meta:
         model = Post
-        fields = ["id","content","created_at","user","likes","dont_minds"]
+        fields = ["id","content","created_at","user","likes","dont_minds","learneds"]
     def create(self,validated_data):
         # リクエストのフィールド名を変更
         content = validated_data.pop('content', validated_data.get('content'))
@@ -33,10 +34,13 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_dont_minds(self, obj):
         return obj.dont_minds.count()
+    
+    def get_learneds(self, obj):
+        return obj.learneds.count()
 
 class PostListSerializer(PostSerializer):
     class Meta(PostSerializer.Meta):
-        fields = ["id", "content", "created_at", "likes", "dont_minds"] 
+        fields = ["id", "content", "created_at", "likes", "dont_minds","learneds"] 
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -61,4 +65,11 @@ class DontMindSerializer(serializers.ModelSerializer):
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
     class Meta:
         model = DontMind
+        fields = ['id', 'user', 'post']
+
+class LearnedSerializer(serializers.ModelSerializer):
+    user = serializers.CharField()
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+    class Meta:
+        model = Learned
         fields = ['id', 'user', 'post']

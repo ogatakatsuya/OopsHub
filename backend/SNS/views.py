@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Post, Like, DontMind
+from .models import Post, Like, DontMind, Learned
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, RoomSerializer,PostListSerializer
 
 def hello(request: WSGIRequest) -> JsonResponse:
@@ -159,7 +159,12 @@ class DontMindCreateDestroyView(ButtonCreateDestroyView):
     def get_model(self):
         return DontMind
     
+class LearnedCreateDestroyView(ButtonCreateDestroyView):
+    serializer_class = DontMindSerializer
+    field_name = 'learneds'
 
+    def get_model(self):
+        return Learned
 ####ここからチャットアプリの実装###
 
 
