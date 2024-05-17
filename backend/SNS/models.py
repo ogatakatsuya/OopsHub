@@ -35,13 +35,6 @@ class AISolution(models.Model):
 
     def __str__(self):
         return self.solution
-    
-    @staticmethod
-    def create(solution_content, post_id):
-        from .models import Post
-        post = Post.objects.filter(id=post_id).first()
-        solution = AISolution(content=solution_content, post=post)
-        solution.save() 
 
 class Button(models.Model):
     user = models.CharField(max_length=50)

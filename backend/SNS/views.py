@@ -102,18 +102,15 @@ def App_modify(request,pk):
 ###AIとのやり取り###
 class LLMView(generics.GenericAPIView):
 
-    def get(self, request):
+    def post(self, request):
         # リクエストボディからデータを取得
         text = request.data.get('text', '')
-        post_id = request.data.get('post_id', '')
+
 
         # データの検証
-        if not text or not post_id:
+        if not text:
             return Response({"error": "Both text and post_id are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # 対応するPostオブジェクトが存在するか確認
-        if not Post.objects.filter(id=post_id).exists():
-            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # 質問の形式を指定
         question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
@@ -137,8 +134,6 @@ class LLMView(generics.GenericAPIView):
             ) # API KEYは.envで設定されている
         except Exception as e:
             return Response({"error": "Error processing your request.", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        solution_content = response["choices"][0]['message']['content']
-        AISolution.create(solution_content=solution_content, post_id=post_id)
         return Response({"solution":response["choices"][0]['message']['content']}, status=status.HTTP_200_OK)
 
 
