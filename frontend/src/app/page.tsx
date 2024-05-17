@@ -1,33 +1,70 @@
 "use client";
 
+import {
+  Flex,
+  Container,
+  Heading,
+  Stack,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 import React from "react";
-import { useAuthContext } from "@/auth_provider/AuthProvider";
-import Introduction from "./components/intro";
-import { Button } from "@chakra-ui/react";
-import Logout from "./components/Logout";
-import Navi from "./components/Navi";
+import ShowIndex from "./components/Index";
+import Illustration from "./components/Illustration";
 
-export default function Home() {
-  const { user } = useAuthContext();
+export default function Introduction() {
   return (
-    <>
-      {user ? (
-        <>
+    <Container maxW={"5xl"}>
+      <Stack
+        textAlign={"center"}
+        align={"center"}
+        spacing={{ base: 8, md: 10 }}
+        py={{ base: 20, md: 28 }}
+      >
+        <Heading
+          fontWeight={600}
+          fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
+          lineHeight={"110%"}
+        >
+          失敗は成功のもと
+        </Heading>
+        <Text
+          as={"span"}
+          color={"gray.500"}
+          fontSize={{ base: "1xl", md: "3xl" }}
+        >
+          身近な失敗談をコミュニティに共有して、新たな学びを見つけよう！
+        </Text>
+        <Stack spacing={6} direction={"row"}>
           <Button
-            size="lg"
-            colorScheme="green"
-            my="24px"
             as="a"
-            href="/app/post"
+            rounded={"full"}
+            px={6}
+            colorScheme={"black"}
+            bg={"black"}
+            _hover={{ bg: "gray.700" }}
+            href="/auth/login"
           >
-            失敗談を投稿する
+            Login
           </Button>
-          <Logout />
-          <Navi />
-        </>
-      ) : (
-        <Introduction />
-      )}
-    </>
+          <Button
+            as="a"
+            rounded={"full"}
+            px={6}
+            _hover={{ bg: "gray.200" }}
+            href="/auth/register"
+          >
+            Sign Up
+          </Button>
+        </Stack>
+        <Flex w={"full"}>
+          <Illustration
+            height={{ sm: "24rem", lg: "28rem" }}
+            mt={{ base: 12, sm: 16 }}
+          />
+        </Flex>
+        <ShowIndex />
+      </Stack>
+    </Container>
   );
 }

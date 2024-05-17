@@ -1,11 +1,20 @@
-'use client';
+"use client";
 
 import { useState } from "react";
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Input, Button, FormErrorMessage, FormLabel, Heading, FormControl, Text, Textarea } from '@chakra-ui/react';
-import { auth } from "../../firebase";
-import ApiButton from "@/app/components/ApiButton";
-import { create } from "domain";
+import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  Input,
+  Button,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  FormControl,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
+import { auth } from "../firebase";
+import ApiButton from "../components/ApiButton";
+import React from "react";
 
 type Inputs = {
   text: string;
@@ -24,20 +33,25 @@ export default function Home() {
     const user_id = auth.currentUser?.uid; // ユーザーIDを正しく取得
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
     const created_at = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 
     try {
-      const res = await fetch("http://localhost:8000/post/", { // ポート番号を修正
+      const res = await fetch("http://localhost:8000/post/", {
+        // ポート番号を修正
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: value.text, user_id: user_id, date: created_at }),
+        body: JSON.stringify({
+          text: value.text,
+          user_id: user_id,
+          date: created_at,
+        }),
       });
 
       if (!res.ok) {
@@ -57,15 +71,13 @@ export default function Home() {
   return (
     <>
       <Heading mb={4}>失敗談共有アプリ</Heading>
-      <Text fontSize='xl'>
-        失敗談を共有する事ができるアプリです😃
-      </Text>
+      <Text fontSize="xl">失敗談を共有する事ができるアプリです😃</Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={!!errors.text}>
           <FormLabel>失敗談：</FormLabel>
           <Textarea
             {...register("text", {
-              required: "失敗談を入力してください．"
+              required: "失敗談を入力してください．",
             })}
           />
           <FormErrorMessage>
@@ -78,13 +90,13 @@ export default function Home() {
           </Text>
         )}
         <Button
-          size='lg'
-          colorScheme='green'
-          my='24px'
+          size="lg"
+          colorScheme="green"
+          my="24px"
           type="submit"
           isLoading={isSubmitting}
         >
-        AIに相談する
+          AIに相談する
         </Button>
       </form>
       <ApiButton />

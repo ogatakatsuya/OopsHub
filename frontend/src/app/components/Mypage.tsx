@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 import Logout from "./Logout";
-import Navi from "./Navi";
+import Navi from "../home/AppBar";
 
 export default function MyPages() {
   <>

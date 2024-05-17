@@ -42,7 +42,7 @@ const Register = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     await signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
-        router.push("/");
+        router.push("/home");
       })
       .catch((error) => {
         if (error.code === "auth/user-not-found") {
