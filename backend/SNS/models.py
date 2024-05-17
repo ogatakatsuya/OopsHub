@@ -29,7 +29,19 @@ class Contest_Post(models.Model):
     def __str__(self):
         return self.message
     
+class AISolution(models.Model):
+    content = models.TextField(null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='solution')
 
+    def __str__(self):
+        return self.solution
+    
+    @staticmethod
+    def create(solution_content, post_id):
+        from .models import Post
+        post = Post.objects.filter(id=post_id).first()
+        solution = AISolution(content=solution_content, post=post)
+        solution.save() 
 
 class Button(models.Model):
     user = models.CharField(max_length=50)

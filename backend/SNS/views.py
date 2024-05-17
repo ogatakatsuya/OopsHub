@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Post, Like, DontMind, Learned,Vote
+from .models import Post, Like, DontMind, Learned,Vote, AISolution
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer
 import os
 from dotenv import load_dotenv
@@ -103,15 +103,20 @@ def App_modify(request,pk):
 class LLMView(generics.GenericAPIView):
 
     def get(self, request):
-        # ユーザーからの失敗談を取得
-        failure_story = request.data.get('text', '')
+        # リクエストボディからデータを取得
+        text = request.data.get('text', '')
+        post_id = request.data.get('post_id', '')
 
         # データの検証
-        if not failure_story:
-            return Response({"error": "No failure story provided."}, status=status.HTTP_400_BAD_REQUEST)
+        if not text or not post_id:
+            return Response({"error": "Both text and post_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 対応するPostオブジェクトが存在するか確認
+        if not Post.objects.filter(id=post_id).exists():
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
         # 質問の形式を指定
-        question = f"次の失敗について：「{failure_story}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
+        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
 
         # .envファイルの読み込み
         load_dotenv()
@@ -132,7 +137,8 @@ class LLMView(generics.GenericAPIView):
             ) # API KEYは.envで設定されている
         except Exception as e:
             return Response({"error": "Error processing your request.", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        solution_content = response["choices"][0]['message']['content']
+        AISolution.create(solution_content=solution_content, post_id=post_id)
         return Response({"solution":response["choices"][0]['message']['content']}, status=status.HTTP_200_OK)
 
 
