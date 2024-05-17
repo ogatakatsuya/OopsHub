@@ -106,14 +106,13 @@ class LLMView(generics.GenericAPIView):
         # リクエストボディからデータを取得
         text = request.data.get('text', '')
 
-
         # データの検証
         if not text:
             return Response({"error": "Both text and post_id are required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
         # 質問の形式を指定
-        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
+        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内以上で提供してください。"
 
         # .envファイルの読み込み
         load_dotenv()
@@ -263,7 +262,8 @@ def contestroom(request,contest_id):
         data=request.data.copy()
         data["contest_id"]=contest_id
         data["message"]=data.get("text")
-        serializer=ContestSerializer(data=data)
+        data["user_id"]=data.get("user_id")
+        serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse({"message":"success"})

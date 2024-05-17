@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Input, Button, FormErrorMessage, FormLabel, Heading, FormControl, Text, Textarea } from '@chakra-ui/react';
+import { Input, Button, FormErrorMessage, FormLabel, Heading, FormControl, Text, Textarea, Flex, Box } from '@chakra-ui/react';
 import { auth } from "../../firebase";
 import ApiButton from "@/app/components/ApiButton";
 import { create } from "domain";
@@ -22,7 +22,6 @@ export default function Home() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const api:SubmitHandler<Inputs> = async (value) => {
-    console.log(value.text);
     try {
       const res = await fetch("http://localhost:8000/api/", { // ポート番号を修正
         method: "POST",
@@ -37,7 +36,7 @@ export default function Home() {
         setSubmitError(errorData.message || "何か問題が発生しました");
       } else {
         const data = await res.json();
-        console.log(data.message);
+        setSolution(data.solution);
         setSubmitError(null); // 成功時に以前のエラーをクリア
       }
     } catch (err) {
@@ -103,6 +102,16 @@ export default function Home() {
             {submitError}
           </Text>
         )}
+        {solution ? 
+        <>
+        <Flex my={4}>
+          <Box>
+            <Text>{solution}</Text>
+          </Box>
+        </Flex>
+        <ApiButton />
+        </>:
+        <>
         <Button
           size='lg'
           colorScheme='green'
@@ -112,8 +121,8 @@ export default function Home() {
         >
         AIに相談する
         </Button>
+        </>}
       </form>
-      <ApiButton />
     </>
   );
 }
