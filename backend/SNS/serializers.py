@@ -66,7 +66,7 @@ class ContestSerializer(serializers.ModelSerializer):
 class Contest_PostSerializer(serializers.ModelSerializer):
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user_id","id","message"]
+        fields=["contest_id","user_id","id","message","created_at"]
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()

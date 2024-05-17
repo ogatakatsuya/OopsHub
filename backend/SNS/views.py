@@ -15,6 +15,7 @@ from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, Con
 import os
 from dotenv import load_dotenv
 from litellm import completion
+import time
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -234,6 +235,7 @@ def contest(request):
         serializer_contest = ContestSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_contest.is_valid():  # データの検証
             serializer_contest.save()  # データの保存
+            data=serializer_contest.data
             return JsonResponse({"message": "success"}, status=201)
         return JsonResponse(serializer_contest.errors, status=400)
     
@@ -263,10 +265,12 @@ def contestroom(request,contest_id):
         data["contest_id"]=contest_id
         data["message"]=data.get("text")
         data["user_id"]=data.get("user_id")
+        data["created_at"]=data.get("created_at")
         serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message":"success"})
+            data=serializer.data
+            return JsonResponse({"message":data["created_at"]})
 
 
 class PostDeleteView(generics.GenericAPIView):
