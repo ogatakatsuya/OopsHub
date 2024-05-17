@@ -38,7 +38,7 @@ const Contest = () => {
                 {contest.map((item) => (
                     <Box key={item["id"]}>
                         <Flex>
-                            <Link rounded={'md'} px={2} py={1} href={`/app/contest/`}>
+                            <Link rounded={'md'} px={2} py={1} href={`/app/contest/${item["id"]}`}>
                                 {item["name"]}
                             </Link>
                         </Flex>
