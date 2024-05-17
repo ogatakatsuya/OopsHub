@@ -10,11 +10,12 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Post, Like, DontMind, Learned,Vote
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer
+from .models import Post, Like, DontMind, Learned,Vote, AISolution
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer
 import os
 from dotenv import load_dotenv
 from litellm import completion
+import time
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -41,10 +42,19 @@ def App(request):
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
         data['content'] = data.pop('text', None)
+        solution_content = data['solution']
         serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_post.is_valid():  # データの検証
-            serializer_post.save()  # データの保存
-            return JsonResponse({"message": "Success!"}, status=201)
+            post = serializer_post.save()  # データの保存
+            # solutionデータがある場合は、AISolutionとして保存
+            if solution_content is not None:
+                solution_data = {'content': solution_content, 'post': post.id}
+                serializer_solution = AISolutionSerializer(data=solution_data)
+                if serializer_solution.is_valid():
+                    serializer_solution.save()  # AISolutionデータの保存
+                else:
+                    return JsonResponse(serializer_solution.errors, status=400)
+            return JsonResponse({"message": "Success!","solution":solution_content}, status=201)
         return JsonResponse(serializer_post.errors, status=400)
         
     if request.method=="PUT":
@@ -102,16 +112,17 @@ def App_modify(request,pk):
 ###AIとのやり取り###
 class LLMView(generics.GenericAPIView):
 
-    def get(self, request):
-        # ユーザーからの失敗談を取得
-        failure_story = request.data.get('text', '')
+    def post(self, request):
+        # リクエストボディからデータを取得
+        text = request.data.get('text', '')
 
         # データの検証
-        if not failure_story:
-            return Response({"error": "No failure story provided."}, status=status.HTTP_400_BAD_REQUEST)
+        if not text:
+            return Response({"error": "Both text and post_id are required."}, status=status.HTTP_400_BAD_REQUEST)
+
 
         # 質問の形式を指定
-        question = f"次の失敗について：「{failure_story}」、具体的な解決策と励ましの言葉を3行以内で提供してください。"
+        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内以上で提供してください。"
 
         # .envファイルの読み込み
         load_dotenv()
@@ -132,7 +143,6 @@ class LLMView(generics.GenericAPIView):
             ) # API KEYは.envで設定されている
         except Exception as e:
             return Response({"error": "Error processing your request.", "details": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
         return Response({"solution":response["choices"][0]['message']['content']}, status=status.HTTP_200_OK)
 
 
@@ -234,6 +244,7 @@ def contest(request):
         serializer_contest = ContestSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_contest.is_valid():  # データの検証
             serializer_contest.save()  # データの保存
+            data=serializer_contest.data
             return JsonResponse({"message": "success"}, status=201)
         return JsonResponse(serializer_contest.errors, status=400)
     
@@ -262,10 +273,13 @@ def contestroom(request,contest_id):
         data=request.data.copy()
         data["contest_id"]=contest_id
         data["message"]=data.get("text")
-        serializer=ContestSerializer(data=data)
+        data["user_id"]=data.get("user_id")
+        data["created_at"]=data.get("created_at")
+        serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message":"success"})
+            data=serializer.data
+            return JsonResponse({"message":data["created_at"]})
 
 
 class PostDeleteView(generics.GenericAPIView):

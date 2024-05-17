@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned
+from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution
+
+class AISolutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AISolution
+        fields = ['content','post']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,9 +17,10 @@ class PostSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     dont_minds = serializers.SerializerMethodField()
     learneds = serializers.SerializerMethodField()
+    solution = serializers.SerializerMethodField(default=None)
     class Meta:
         model = Post
-        fields = ["id","content","created_at","user","likes","dont_minds","learneds"]
+        fields = ["id","content","created_at","user","likes","dont_minds","learneds","solution"]
     def create(self,validated_data):
         # リクエストのフィールド名を変更
         content = validated_data.pop('content', validated_data.get('content'))
@@ -37,10 +43,19 @@ class PostSerializer(serializers.ModelSerializer):
     
     def get_learneds(self, obj):
         return obj.learneds.count()
+    
+    def get_solution(self, obj):
+        
+        solution = obj.solution.first()  
+        if solution:
+            return solution.content
+        return None
 
 class PostListSerializer(PostSerializer):
     class Meta(PostSerializer.Meta):
-        fields = ["id", "content", "created_at", "likes", "dont_minds","learneds"] 
+        fields = ["id", "content", "created_at", "likes", "dont_minds","learneds","solution"] 
+
+
 
 
 class ContestSerializer(serializers.ModelSerializer):
@@ -51,7 +66,7 @@ class ContestSerializer(serializers.ModelSerializer):
 class Contest_PostSerializer(serializers.ModelSerializer):
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user_id","id","message"]
+        fields=["contest_id","user_id","id","message","created_at"]
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
