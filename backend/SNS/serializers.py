@@ -17,7 +17,7 @@ class PostSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     dont_minds = serializers.SerializerMethodField()
     learneds = serializers.SerializerMethodField()
-    solution = serializers.SerializerMethodField()
+    solution = serializers.SerializerMethodField(default=None)
     class Meta:
         model = Post
         fields = ["id","content","created_at","user","likes","dont_minds","learneds","solution"]
