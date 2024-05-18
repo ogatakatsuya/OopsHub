@@ -13,8 +13,7 @@ import {
   Box,
   Flex,
 } from "@chakra-ui/react";
-import { auth } from "../firebase";
-import ApiButton from "../components/ApiButton";
+import ApiButton from "../../components/ApiButton";
 import React from "react";
 
 type Inputs = {
