@@ -302,34 +302,6 @@ def contestroom(request,contest_id):
     
     contest_posts=Contest_Post.objects.filter(contest_id=contest_id).all().order_by("-id")#古い順に並べてある
     if request.method=="GET":
-        # JSONデータの定義
-        data = {
-            "message": [
-                {
-                    "contest_id": "1",
-                    "user": "1",
-                    "id": 14,
-                    "message": "恥ずかしい",
-                    "created_at": "2024/04/05",
-                    "votes": 0,
-                    "title": "恥ずかしい失敗談"
-                },
-                {
-                    "contest_id": "1",
-                    "user": "vkko7wsEm9XquD4JMChRcR7ouS82",
-                    "id": 9,
-                    "message": "テスト投稿1",
-                    "created_at": "2024/05/18 14:18:09",
-                    "votes": 0,
-                    "title": "初めての失敗"
-                }
-            ],
-            "title": "春のコーディングコンテスト",
-            "vote": 123
-        }
-
-        # Response オブジェクトでデータを返す
-        return Response(data)
         serializer=Contest_PostSerializer(contest_posts,many=True)
         votes=[getattr(post, "votes").count() for post in contest_posts]
         contest_posts=serializer.data
@@ -353,12 +325,8 @@ def contestroom(request,contest_id):
             return JsonResponse({"message":data["created_at"]})
 
 
-class PostDeleteView(generics.GenericAPIView):
-    def get_model(self):
-        raise NotImplementedError("Subclasses must implement this method.")
-    
+class PostDeleteView(generics.GenericAPIView):    
     def get(self,request,*args,**kwargs):
-        user_id = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         contest_id=self.kwargs.get("contest_id")
         post=Contest_Post.objects.filter(id=post_id,contest_id=contest_id).all().first()
@@ -367,11 +335,27 @@ class PostDeleteView(generics.GenericAPIView):
         return JsonResponse({"message":"Post not exist"})
     
     def delete(self,request,*args,**kwargs):
-        user_id = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         contest_id=self.kwargs.get("contest_id")
-        post = get_object_or_404(Contest_Post, post_id=post_id,contest_id=contest_id)
-        instance = self.get_model().objects.filter(user_id=user_id, post=post).first()
+        post = get_object_or_404(Contest_Post, id=post_id,contest_id=contest_id)
+        instance = Contest_Post.objects.filter(id=post_id,contest_id=contest_id).first()
+        if instance:
+            instance.delete()
+            return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "the post does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+class ContestDeleteView(generics.GenericAPIView):  
+    def get(self,request,*args,**kwargs):
+        contest_id=self.kwargs.get("contest_id")
+        contest=Contest.objects.filter(id=contest_id).all().first()
+        if contest:
+            return JsonResponse({"message":"success"})
+        return JsonResponse({"message":"Contest not exist"})
+    
+    def delete(self,request,*args,**kwargs):
+        contest_id=self.kwargs.get("contest_id")
+        contest = get_object_or_404(Contest,id=contest_id)
+        instance = Contest.objects.filter(id=contest_id).first()
         if instance:
             instance.delete()
             return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)

@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import LikeCreateDestroyView, DontMindCreateDestroyView,LearnedCreateDestroyView,LLMView,VoteCreateDestroyView
+from .views import LikeCreateDestroyView, DontMindCreateDestroyView,LearnedCreateDestroyView,LLMView,VoteCreateDestroyView,ContestDeleteView
 
 
 urlpatterns = [
@@ -8,6 +8,7 @@ urlpatterns = [
     path('post/',views.App,name="Application"),
     path("post/<int:pk>",views.App_modify,name="modify_app"),
     path("contest/",views.contest,name="contest"),
+    path("contest/<int:contest_id>",ContestDeleteView.as_view(),name="contest-delete"),
     path("contest/<int:contest_id>/post",views.contestroom,name="contestroom"),
     path("contest/<int:contest_id>/post/<int:post_id>",views.PostDeleteView.as_view(),name="delete-post"),
     path("contest/<int:post_id>/vote",VoteCreateDestroyView.as_view(),name="vote-create"),
