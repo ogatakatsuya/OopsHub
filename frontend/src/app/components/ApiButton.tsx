@@ -1,13 +1,9 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { auth } from "../firebase";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-type Inputs = {
-  text: string;
-  solution: string;
-};
 
-const ApiButton = ({ text, solution }: Inputs) => {
+const ApiButton = ({ text, solution, setText, setSolution, onClose }) => {
   const [submitError, setSubmitError] = useState();
   const router = useRouter();
   const Submit = async () => {
@@ -42,7 +38,9 @@ const ApiButton = ({ text, solution }: Inputs) => {
       } else {
         const data = await res.json();
         console.log(data);
-        router.push("/app/home");
+        setText("");
+        setSolution("");
+        onClose();
       }
     } catch (err) {
       console.error("ネットワークエラー:", err);
@@ -50,15 +48,16 @@ const ApiButton = ({ text, solution }: Inputs) => {
   };
   return (
     <>
-      <Button
-        size="lg"
-        colorScheme="blue"
-        my="24px"
-        type="submit"
-        onClick={Submit}
-      >
-        共有する
-      </Button>
+        <Flex justify="flex-end" mt={4}>
+        <Button
+            size="lg"
+            colorScheme="blue"
+            type="submit"
+            onClick={Submit}
+        >
+          共有する
+        </Button>
+        </Flex>
     </>
   );
 };

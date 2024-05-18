@@ -13,6 +13,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
+import SubmitMordal from "./SubmitMordal";
 
 export default function PostButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,20 +44,7 @@ export default function PostButton() {
           <AddIcon boxSize={6} />
         </Button>
       </Box>
-      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create your account</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>hello</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <SubmitMordal onClose={onClose} onOpen={onOpen} isOpen={isOpen}/>
     </>
   );
 }

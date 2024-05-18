@@ -2,8 +2,8 @@
 
 import React from "react";
 import {  Box } from "@chakra-ui/react";
-import BottomBar from "./BottomBar";
-import UpBar from "./UpBar";
+import BottomBar from "./components/BottomBar";
+import UpBar from "./components/UpBar";
 import { useAuthContext } from "../auth_provider/AuthProvider";
 import Spininng from "../components/Spininng";
 
