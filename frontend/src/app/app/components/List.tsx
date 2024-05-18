@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import {
-  Card,
+  Divider,
   Flex,
   Avatar,
-  CardHeader,
-  Heading,
-  CardBody,
   Stack,
   StackDivider,
   Box,
   Text,
 } from "@chakra-ui/react";
 import { useAuthContext } from "@/app/auth_provider/AuthProvider";
-import LikeButton from "./LikeButton";
-import DonmaiButton from "./DonmaiButton";
-import WaraButton from "./WaraButton";
+import LikeButton from "../../components/LikeButton";
+import DonmaiButton from "../../components/DonmaiButton";
+import WaraButton from "../../components/WaraButton";
 
-export default function ShowIndex() {
+export default function List() {
   const [value, setValue] = useState([]);
   const { user } = useAuthContext();
   useEffect(() => {
@@ -41,17 +38,11 @@ export default function ShowIndex() {
   }, []);
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <Heading size="md">失敗談一覧</Heading>
-        </CardHeader>
-
-        <CardBody>
-          <Stack divider={<StackDivider />} spacing="4">
+    <Flex bgColor={"gray.200"}>
+          <Stack divider={<Divider borderColor='gray.900'/>} spacing="4" >
             {value.map((item, index) => (
-              <Box key={item["id"]}>
-                <Flex alignItems={"start"} mb={4}>
+              <Box key={item["id"]} mx={6}>
+                <Flex alignItems={"start"} mt={4} mb={4}>
                   <Avatar />
                   <Box ml={2}>
                     <Text bgColor={"gray.200"} rounded={"md"} px={2} py={1}>
@@ -91,8 +82,6 @@ export default function ShowIndex() {
               </Box>
             ))}
           </Stack>
-        </CardBody>
-      </Card>
-    </>
+    </Flex>
   );
 }

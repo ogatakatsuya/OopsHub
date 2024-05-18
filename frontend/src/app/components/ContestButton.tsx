@@ -22,7 +22,6 @@ const ContestButton = ({ children }:any) => {
       onClick={clickHandler}
     >
       {children}
-      コンテストに参加する
     </Button>
   );
 };

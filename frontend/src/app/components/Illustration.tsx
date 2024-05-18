@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Icon, IconProps, Heading, Text, Stack, Button,Flex, Container } from "@chakra-ui/react";
-import ShowIndex from "./Index";
+import ShowIndex from "../app/components/Index";
 
 export default function Illustration(props: IconProps) {
   return (
