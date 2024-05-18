@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Button, Flex, Icon, useColorModeValue } from '@chakra-ui/react'
 import { BsFillHouseDoorFill, BsLightbulbFill, BsBellFill } from 'react-icons/bs'
 import ContestButton from '../../components/ContestButton'
+import HomeButton from '../../components/HomeButton'
 
 export default function BottomBar() {
   return (
@@ -17,18 +18,9 @@ export default function BottomBar() {
         px={2}
       >
         <Flex h={14} justifyContent="space-between" alignItems="center">
-          <Button
-            flex={'1'}
-            variant="ghost"
-            width="50px"
-            height="50px"
-            _active={{
-              bg: 'gray.300',
-              borderRadius: '50%',
-            }}
-          >
+          <HomeButton>
             <Icon as={BsFillHouseDoorFill} boxSize={5} />
-          </Button>
+          </HomeButton>
           <ContestButton>
             <Icon as={BsLightbulbFill} boxSize={5} />
           </ContestButton>
