@@ -313,12 +313,8 @@ def contestroom(request,contest_id):
             return JsonResponse({"message":data["created_at"]})
 
 
-class PostDeleteView(generics.GenericAPIView):
-    def get_model(self):
-        raise NotImplementedError("Subclasses must implement this method.")
-    
+class PostDeleteView(generics.GenericAPIView):    
     def get(self,request,*args,**kwargs):
-        user_id = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         contest_id=self.kwargs.get("contest_id")
         post=Contest_Post.objects.filter(id=post_id,contest_id=contest_id).all().first()
@@ -327,11 +323,27 @@ class PostDeleteView(generics.GenericAPIView):
         return JsonResponse({"message":"Post not exist"})
     
     def delete(self,request,*args,**kwargs):
-        user_id = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         contest_id=self.kwargs.get("contest_id")
-        post = get_object_or_404(Contest_Post, post_id=post_id,contest_id=contest_id)
-        instance = self.get_model().objects.filter(user_id=user_id, post=post).first()
+        post = get_object_or_404(Contest_Post, id=post_id,contest_id=contest_id)
+        instance = Contest_Post.objects.filter(id=post_id,contest_id=contest_id).first()
+        if instance:
+            instance.delete()
+            return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "the post does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+class ContestDeleteView(generics.GenericAPIView):  
+    def get(self,request,*args,**kwargs):
+        contest_id=self.kwargs.get("contest_id")
+        contest=Contest.objects.filter(id=contest_id).all().first()
+        if contest:
+            return JsonResponse({"message":"success"})
+        return JsonResponse({"message":"Contest not exist"})
+    
+    def delete(self,request,*args,**kwargs):
+        contest_id=self.kwargs.get("contest_id")
+        contest = get_object_or_404(Contest,id=contest_id)
+        instance = Contest.objects.filter(id=contest_id).first()
         if instance:
             instance.delete()
             return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)
