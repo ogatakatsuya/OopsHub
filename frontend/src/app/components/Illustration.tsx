@@ -3,7 +3,64 @@
 import React from "react";
 import { Icon, IconProps } from "@chakra-ui/react";
 
-export default function Illustration(props: IconProps) {
+export default function Introduction() {
+  return (
+    <Container maxW={"5xl"}>
+      <Stack
+        textAlign={"center"}
+        align={"center"}
+        spacing={{ base: 8, md: 10 }}
+        py={{ base: 20, md: 28 }}
+      >
+        <Heading
+          fontWeight={600}
+          fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
+          lineHeight={"110%"}
+        >
+          OopsHub{" "}
+        </Heading>
+        <Text
+          as={"span"}
+          color={"gray.500"}
+          fontSize={{ base: "1xl", md: "3xl" }}
+        >
+          失敗は成功のもと。失敗談を共有して、新たな出会いを見つけよう！
+        </Text>
+        <Stack spacing={6} direction={"row"}>
+          <Button
+            as="a"
+            rounded={"full"}
+            px={6}
+            colorScheme={"black"}
+            bg={"black"}
+            _hover={{ bg: "gray.700" }}
+            href="/auth/login"
+          >
+            Login
+          </Button>
+          <Button
+            as="a"
+            rounded={"full"}
+            px={6}
+            _hover={{ bg: "gray.200" }}
+            href="/auth/register"
+          >
+            Sign Up
+          </Button>
+        </Stack>
+        <Flex w={"full"}>
+          <Illustration
+            height={{ sm: "24rem", lg: "28rem" }}
+            mt={{ base: 12, sm: 16 }}
+          />
+        </Flex>
+        <ShowIndex></ShowIndex>
+      </Stack>
+    </Container>
+  );
+}
+
+export const Illustration = (props: IconProps) => {
   return (
     <Icon
       width="100%"

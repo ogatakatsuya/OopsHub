@@ -305,6 +305,5 @@ class PostDeleteView(generics.GenericAPIView):
             instance.delete()
             return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)
         return Response({"message": "the post does not exist"}, status=status.HTTP_404_NOT_FOUND)
-    
-     
+
 
