@@ -1,55 +1,55 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useState } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import {
-Button,
-FormErrorMessage,
-FormLabel,
-Heading,
-FormControl,
-Text,
-Textarea,
-Box,
-Flex,
-} from "@chakra-ui/react";
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
+  Button,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  FormControl,
+  Text,
+  Textarea,
+  Box,
+  Flex,
 } from '@chakra-ui/react'
-import ApiButton from "@/app/components/ApiButton";
-import React from "react";
-import { useAuthContext } from "@/app/auth_provider/AuthProvider";
-import { AiOutlineAliwangwang } from "react-icons/ai";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react'
+import ApiButton from '@/app/components/ApiButton'
+import React from 'react'
+import { useAuthContext } from '@/app/auth_provider/AuthProvider'
+import { AiOutlineAliwangwang } from 'react-icons/ai'
 
 type Inputs = {
-text: string;
-};
+  text: string
+}
 
-export default function SubmitMordal({isOpen, onOpen, onClose}) {
-const [solution, setSolution] = useState("");
-const [text, setText] = useState("");
-const { user } = useAuthContext();
-const {
+export default function SubmitMordal({ isOpen, onOpen, onClose }) {
+  const [solution, setSolution] = useState('')
+  const [text, setText] = useState('')
+  const { user } = useAuthContext()
+  const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-} = useForm<Inputs>();
+  } = useForm<Inputs>()
 
-const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
 const api: SubmitHandler<Inputs> = async (value) => {
     try {
-    const res = await fetch("http://localhost:8000/api/", {
+      const res = await fetch('http://localhost:8000/api/', {
         // ポート番号を修正
-        method: "POST",
+        method: 'POST',
         headers: {
-        "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ text: value.text }),
     });
@@ -65,12 +65,12 @@ const api: SubmitHandler<Inputs> = async (value) => {
         setSubmitError(null); // 成功時に以前のエラーをクリア
     }
     } catch (err) {
-    setSubmitError("ネットワークエラーです。後で再試行してください。");
-    console.error("ネットワークエラー:", err);
+      setSubmitError('ネットワークエラーです。後で再試行してください。')
+      console.error('ネットワークエラー:', err)
     }
-};
+  }
 
-return (
+  return (
     <>
     <Modal isOpen={isOpen} onClose={onClose} size={{base: "lg",xs:"xs"}}>
     <ModalOverlay />
@@ -144,5 +144,5 @@ return (
     </ModalContent>
     </Modal>
     </>
-);
+  )
 }
