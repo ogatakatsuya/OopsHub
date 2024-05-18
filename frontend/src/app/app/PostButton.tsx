@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { redirect } from "next/navigation";
 
 export default function PostButton() {
-  const postButton = () => {
-    redirect("/app/post");
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Box
-        onClick={postButton}
+        onClick={onOpen}
         position="fixed"
         bottom={["75px", "50px"]}
         right={["20px", "50px"]}
@@ -34,6 +43,20 @@ export default function PostButton() {
           <AddIcon boxSize={6} />
         </Button>
       </Box>
+      <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create your account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>hello</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

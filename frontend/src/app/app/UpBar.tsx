@@ -10,22 +10,15 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../firebase";
 import { useRouter } from "next/navigation";
 import { SettingsIcon } from "@chakra-ui/icons";
-import { Icon } from "@chakra-ui/react";
-import {
-  BsFillHouseDoorFill,
-  BsLightbulbFill,
-  BsBellFill,
-} from "react-icons/bs";
 
 interface Props {
   children: React.ReactNode;
@@ -108,28 +101,6 @@ export default function AppBar() {
             </Stack>
           </Box>
         ) : null}
-      </Box>
-      <Box
-        position="fixed"
-        display={{ base: "block", sm: "none" }}
-        bottom="0"
-        left="0"
-        width="100%"
-        bg={useColorModeValue("gray.100", "gray.900")}
-        boxShadow="lg"
-        px={2}
-      >
-        <Flex h={14} justifyContent="space-around" alignItems="center">
-          <Button>
-            <Icon as={BsFillHouseDoorFill} boxSize={5} />
-          </Button>
-          <Button>
-            <Icon as={BsLightbulbFill} boxSize={5} />
-          </Button>
-          <Button>
-            <Icon as={BsBellFill} boxSize={5} />
-          </Button>
-        </Flex>
       </Box>
     </>
   );
