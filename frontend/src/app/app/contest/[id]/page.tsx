@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { useDisclosure } from "@chakra-ui/react";
 import SubmitMordal from "../components/SubmitMordal";
 import VoteButton from "../components/VoteButton";
+import PostButton from "../components/PostButton";
 
 
 
@@ -41,7 +42,8 @@ const Contest = ({ params }: ContestProps) => {
         <>
         <Card>
         <CardHeader>
-            <Heading size='md'>コンテスト{params.id} 詳細ページ</Heading>
+            <Heading size='md'>お題 : {value[0]["title"] &&
+            <Text>{value[0]["title"]}</Text>}</Heading>
         </CardHeader>
 
         <CardBody>
@@ -65,13 +67,7 @@ const Contest = ({ params }: ContestProps) => {
         </CardBody>
         </Card>
 
-        <Button onClick={onOpen}
-                size="lg"
-                colorScheme="green"
-                my="24px"
-                mx="24px">
-            コンテストに投稿する
-        </Button>
+        <PostButton contest_id={params.id} />
         <SubmitMordal isOpen={isOpen} onClose={onClose} onOpen={onOpen} contest_id={params.id} setValue={setValue}/>
         </>
     );

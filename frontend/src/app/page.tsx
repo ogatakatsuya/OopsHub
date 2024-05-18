@@ -12,10 +12,13 @@ import React from "react";
 import Illustration from "./components/Illustration";
 import Hook from "./components/Hook";
 import { useAuthContext } from "./auth_provider/AuthProvider";
+import SplitScreen from "./components/SplitScreen";
+import HomeFooter from "./components/HomeFooter"
 
 export default function LandingPage () {
   const { user } = useAuthContext();
   return (
+    <>
     <Container maxW={"5xl"}>
       <Stack
         textAlign={"center"}
@@ -28,7 +31,7 @@ export default function LandingPage () {
           fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
           lineHeight={"110%"}
         >
-          失敗は成功のもと
+          OopsHub
         </Heading>
         <Text
           as={"span"}
@@ -81,8 +84,10 @@ export default function LandingPage () {
             mt={{ base: 12, sm: 16 }}
           />
         </Flex>
-        <Hook />
       </Stack>
     </Container>
+    <SplitScreen />
+    <HomeFooter />
+    </>
   );
 }

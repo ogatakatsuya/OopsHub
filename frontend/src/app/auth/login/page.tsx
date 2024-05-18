@@ -12,15 +12,11 @@ import {
   Box,
   Flex,
   InputGroup,
-  InputRightElement,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { auth } from "../../firebase";
 import { useRouter } from "next/navigation";
@@ -52,6 +48,7 @@ const Register = () => {
         }
       });
   };
+
   return (
     <Flex
       minH={"100vh"}
@@ -59,13 +56,13 @@ const Register = () => {
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
-      {" "}
       <Box
         rounded={"lg"}
         bg={useColorModeValue("white", "gray.700")}
         boxShadow={"lg"}
-        p={10}
-        minW={"500px"}
+        p={8}
+        w={{ base: "90%", sm: "80%", md: "60%", lg: "50%", xl: "40%" }}
+        maxW={"500px"}
       >
         <Heading fontSize={"2xl"} textAlign={"center"} py={4}>
           Login

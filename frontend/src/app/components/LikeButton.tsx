@@ -41,21 +41,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
       setSubmitError('ネットワークエラーです。後で再試行してください。')
       console.error('ネットワークエラー:', err)
     }
-  }
-
-  return (
-    <>
-      <span>{learnedNum}</span>
-      <Button mr={3} size="xs" onClick={toggleLike}>
-        ためになる
-      </Button>
-      {submitError && (
-        <Text color="red.500" mt={2}>
-          {submitError}
-        </Text>
-      )}
-    </>
-  )
+    return (
+        <>
+            <span>{learnedNum}</span>
+            <Button mr={3} size='xs' onClick={toggleLike}>
+                ためになる
+            </Button>
+        </>
+    )
 }
 
 export default LikeButton

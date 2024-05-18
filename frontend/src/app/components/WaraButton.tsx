@@ -49,11 +49,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, likes }) => {
             <Button mr={3} size='xs' onClick={toggleLike}>
                 笑った
             </Button>
-            {submitError && (
-                <Text color="red.500" mt={2}>
-                    {submitError}
-                </Text>
-            )}
         </>
     )
 }

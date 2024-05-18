@@ -15,6 +15,7 @@ import { useAuthContext } from "@/app/auth_provider/AuthProvider";
 import LikeButton from "./LikeButton";
 import DonmaiButton from "./DonmaiButton";
 import WaraButton from "./WaraButton";
+import { AiOutlineAliwangwang } from "react-icons/ai";
 
 export default function Hook() {
 const [value, setValue] = useState([]);
@@ -70,7 +71,7 @@ return (
                     </Text>
                 }
                 </Box>
-                <Avatar />
+                <AiOutlineAliwangwang />
                 </Flex>
                 <Text fontSize="sm" my={4}>
                 {item["created_at"]}
