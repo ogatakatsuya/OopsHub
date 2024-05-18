@@ -57,7 +57,7 @@ const SubmitMordal = ({ isOpen, onClose, onOpen, contest_id }) => {
         }
         };
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} size="lg">
             <ModalOverlay />
             <ModalContent>
             <ModalHeader>コンテストに投稿！</ModalHeader>

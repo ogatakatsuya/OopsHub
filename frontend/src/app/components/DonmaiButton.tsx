@@ -42,11 +42,6 @@ const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id, dontminds }) => {
         <>
         <span>{dontmindsNum}</span>
         <Button mr={3} size='xs' onClick={like}>どんまい</Button>
-        {submitError && (
-        <Text color="red.500" mt={2}>
-            {submitError}
-        </Text>
-        )}
         </>
     )
 }
