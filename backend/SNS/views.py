@@ -16,6 +16,7 @@ import os
 from dotenv import load_dotenv
 from litellm import completion
 import time
+from datetime import datetime
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -263,10 +264,30 @@ def contest(request):
         # JSONデータをPythonの辞書として定義
         contests_data = {
             "contests": [
-                {"contest_id": 1, "name": "Spring Coding Competition", "available": True},
-                {"contest_id": 2, "name": "Summer Hackathon", "available": False},
-                {"contest_id": 3, "name": "Autumn Data Challenge", "available": True},
-                {"contest_id": 4, "name": "Winter Algorithm Battle", "available": True}
+                {
+                    "contest_id": 1,
+                    "name": "Spring Coding Competition",
+                    "deadline": datetime(2024, 3, 10),  # 過去の日付
+                    "available": False 
+                },
+                {
+                    "contest_id": 2,
+                    "name": "Summer Hackathon",
+                    "deadline": datetime(2024, 6, 30),  # 将来の日付
+                    "available": True
+                },
+                {
+                    "contest_id": 3,
+                    "name": "Autumn Data Challenge",
+                    "deadline": datetime(2024, 9, 1),  # 将来の日付
+                    "available": True
+                },
+                {
+                    "contest_id": 4,
+                    "name": "Winter Algorithm Battle",
+                    "deadline": datetime(2024, 12, 1),  # 将来の日付
+                    "available": True
+                }
             ]
         }
         # Responseオブジェクトにデータを渡して返す
