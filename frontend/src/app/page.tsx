@@ -9,10 +9,12 @@ import {
   Button,
 } from "@chakra-ui/react";
 import React from "react";
-import ShowIndex from "./components/Index";
 import Illustration from "./components/Illustration";
+import Hook from "./components/Hook";
+import { useAuthContext } from "./auth_provider/AuthProvider";
 
 export default function LandingPage () {
+  const { user } = useAuthContext();
   return (
     <Container maxW={"5xl"}>
       <Stack
@@ -35,6 +37,21 @@ export default function LandingPage () {
         >
           身近な失敗談をコミュニティに共有して、新たな学びを見つけよう！
         </Text>
+        {user ?
+        <>
+        <Button
+            as="a"
+            rounded={"full"}
+            px={6}
+            colorScheme={"black"}
+            bg={"black"}
+            _hover={{ bg: "gray.700" }}
+            href="/app/home"
+          >
+            Home
+          </Button>
+        </>:
+        <>
         <Stack spacing={6} direction={"row"}>
           <Button
             as="a"
@@ -57,13 +74,14 @@ export default function LandingPage () {
             Sign Up
           </Button>
         </Stack>
+        </>}
         <Flex w={"full"}>
           <Illustration
             height={{ sm: "24rem", lg: "28rem" }}
             mt={{ base: 12, sm: 16 }}
           />
         </Flex>
-        <ShowIndex />
+        <Hook />
       </Stack>
     </Container>
   );

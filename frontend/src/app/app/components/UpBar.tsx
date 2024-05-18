@@ -16,7 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { useRouter } from "next/navigation";
 import { SettingsIcon } from "@chakra-ui/icons";
 
