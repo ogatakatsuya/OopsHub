@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution,Vote
-
+import datetime
 class AISolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AISolution
@@ -62,6 +62,11 @@ class ContestSerializer(serializers.ModelSerializer):
     class Meta:
         model=Contest
         fields=["id","created_at","name"]
+    def get_available(self,obj):
+        now=datetime.datetime.now()
+        if obj.deadline>=now:
+            return True
+        return False
 
 class Contest_PostSerializer(serializers.ModelSerializer):
     votes = serializers.SerializerMethodField()

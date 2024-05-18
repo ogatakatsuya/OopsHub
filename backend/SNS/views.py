@@ -269,11 +269,12 @@ def contest(request):
                 {"contest_id": 4, "name": "Winter Algorithm Battle", "available": True}
             ]
         }
-        # Responseオブジェクトにデータを渡して返す
-        return Response(contests_data)
-        # 本当はこっち 
         serializer_get = ContestSerializer(contests, many=True)
-        contests = serializer_get.data
+        contest_serializers = serializer_get.data
+        contests=[]
+        for contest_serializer in contest_serializers:
+            contest_serializer["contest_id"]=contest_serializer.pop("id")
+            contests.append(contest_serializer)
         return Response({"message": contests})
     
     if request.method=="POST":
@@ -327,9 +328,6 @@ def contestroom(request,contest_id):
             "title": "春のコーディングコンテスト",
             "vote": 123
         }
-
-        # Response オブジェクトでデータを返す
-        return Response(data)
         serializer=Contest_PostSerializer(contest_posts,many=True)
         votes=[getattr(post, "votes").count() for post in contest_posts]
         contest_posts=serializer.data
