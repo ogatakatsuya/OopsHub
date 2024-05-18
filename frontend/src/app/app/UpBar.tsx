@@ -10,22 +10,15 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth } from "../firebase";
 import { useRouter } from "next/navigation";
 import { SettingsIcon } from "@chakra-ui/icons";
-import { Icon } from "@chakra-ui/react";
-import {
-  BsFillHouseDoorFill,
-  BsLightbulbFill,
-  BsBellFill,
-} from "react-icons/bs";
 
 interface Props {
   children: React.ReactNode;
@@ -71,7 +64,7 @@ export default function AppBar() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "black")} px={5}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+        <Flex h={14} alignItems={"center"} justifyContent={"space-between"}>
           <Menu>
             <MenuButton
               as={Button}
@@ -97,7 +90,7 @@ export default function AppBar() {
           <Text fontSize="xl" fontWeight="bold" ml={4}>
             MyApp
           </Text>
-          <SettingsIcon />
+          <SettingsIcon boxSize={5} />
         </Flex>
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
@@ -108,28 +101,6 @@ export default function AppBar() {
             </Stack>
           </Box>
         ) : null}
-      </Box>
-      <Box
-        position="fixed"
-        display={{ base: "block", sm: "none" }}
-        bottom="0"
-        left="0"
-        width="100%"
-        bg={useColorModeValue("gray.100", "gray.900")}
-        boxShadow="lg"
-        p={2}
-      >
-        <Flex justifyContent="space-around" alignItems="center">
-          <Button>
-            <Icon as={BsFillHouseDoorFill} />
-          </Button>
-          <Button>
-            <Icon as={BsLightbulbFill} />
-          </Button>
-          <Button>
-            <Icon as={BsBellFill} />
-          </Button>
-        </Flex>
       </Box>
     </>
   );
