@@ -16,6 +16,7 @@ import {
 import ApiButton from "@/app/components/ApiButton";
 import React from "react";
 import { useAuthContext } from "@/app/auth_provider/AuthProvider";
+import BackButton from "@/app/components/BackButton";
 
 type Inputs = {
   text: string;
@@ -103,6 +104,7 @@ export default function Home() {
           </>
         )}
       </form>
+      <BackButton />
     </>
   );
 }
