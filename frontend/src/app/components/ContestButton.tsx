@@ -16,7 +16,7 @@ const ContestButton = () => {
         mx="24px"
         onClick={clickHandler}
         >
-            コンテストに参加する
+        コンテストに参加する
         </Button>
     )
 }
