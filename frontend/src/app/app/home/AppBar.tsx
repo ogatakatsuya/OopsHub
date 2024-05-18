@@ -17,12 +17,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import { useRouter } from "next/navigation";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { Icon } from "@chakra-ui/react";
-import { BsFillHouseDoorFill, BsLightbulbFill, BsBellFill } from "react-icons/bs";
-
+import {
+  BsFillHouseDoorFill,
+  BsLightbulbFill,
+  BsBellFill,
+} from "react-icons/bs";
 
 interface Props {
   children: React.ReactNode;
@@ -115,12 +118,18 @@ export default function AppBar() {
         bg={useColorModeValue("gray.100", "gray.900")}
         boxShadow="lg"
         p={2}
-        justifyContent="space-between"
-        alignItems="center"
       >
-        <Icon as={BsFillHouseDoorFill} />
-        <Icon as={BsLightbulbFill} />
-        <Icon as={BsBellFill} />
+        <Flex justifyContent="space-around" alignItems="center">
+          <Button>
+            <Icon as={BsFillHouseDoorFill} />
+          </Button>
+          <Button>
+            <Icon as={BsLightbulbFill} />
+          </Button>
+          <Button>
+            <Icon as={BsBellFill} />
+          </Button>
+        </Flex>
       </Box>
     </>
   );

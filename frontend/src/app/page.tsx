@@ -12,7 +12,7 @@ import React from "react";
 import ShowIndex from "./components/Index";
 import Illustration from "./components/Illustration";
 
-export default function Introduction() {
+export default function LandingPage () {
   return (
     <Container maxW={"5xl"}>
       <Stack
