@@ -117,17 +117,42 @@ class LLMView(generics.GenericAPIView):
         text = request.data.get('text', '')
 
         # データの検証
-        if not text:
+        if text=='':
             return Response({"error": "Both text and post_id are required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
         # 質問の形式を指定
-        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内以上で会話するような口調で提供してください。"
+        example = """
+        入力例1:
+        本当にやりたいことと向き合っていなかった。
 
-        # .envファイルの読み込み
-        load_dotenv()
+        出力例1:
+        小さな一歩から始めよう！まずは好きなことを少しずつやってみる。自分を信じて！みんな失敗するんだよ！大丈夫、君ならきっと成功できる！ファイト！ 💪😊
+
+        入力例2:
+        友達が大事にしているものを壊してしまった。
+
+        出力例2:
+        失敗は誰にでも起こるもの。まずは正直に事情を話して謝罪しよう。壊れたものが修理可能か確認するか、新しいものを一緒に選びに行こう。心からの行動が信頼を取り戻す第一歩だよ！😊
+
+
+        入力例3:
+        大事な書類を無くしてしまった。
+
+        出力例3:
+        もう一度冷静になって、落としちゃった書類を探してみよう。もし見つからなければ、関係者に正直に報告して対策を一緒に考えよう。大丈夫、失敗は次の成功へのステップだからさ！✊😊
 
         """
+        style = """
+        出力：励ましの言葉や解決策だけを書く
+        """
+
+        question = "失敗："+text+"""
+        \n要求：この失敗に対して、解決策と励ましの言葉だけを4行以内で考えてください。これらの文章は失敗と一緒にSNSに投稿されます。また、親友のような口調で論理的に答えて。入力例は出力せずに、出力だけして。
+        """+example+style
+
+        """
+        モデルを以下から選択、OPENAIとopenrouterなら使用可能
         model=
 
         "openrouter/openchat/openchat-7b:free"  # 無料
@@ -138,7 +163,7 @@ class LLMView(generics.GenericAPIView):
 
         try:
             response = completion(
-                model="gpt-3.5-turbo",
+                model="gpt-4o",
                 messages=[{"content": question, "role": "user"}],
             ) # API KEYは.envで設定されている
         except Exception as e:

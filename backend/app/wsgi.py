@@ -10,6 +10,10 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
+from dotenv import load_dotenv
+
+# 環境変数の読み込み
+load_dotenv()
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings')
 
