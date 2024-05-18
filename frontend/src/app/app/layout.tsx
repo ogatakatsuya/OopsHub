@@ -21,7 +21,7 @@ export default function MypageLayout({ children }: { children: React.ReactNode }
       {user ? (
         <>
           <UpBar />
-          <Box pt={'56px'} pb={'60px'}>
+          <Box pt={'56px'} pb={{ sm: '0px', base: '56px' }}>
             {children}
           </Box>
           <BottomBar />
