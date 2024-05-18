@@ -24,7 +24,7 @@ class Contest(models.Model):
 
 class Contest_Post(models.Model):
     contest_id=models.CharField(max_length=50)
-    user_id=models.CharField(max_length=50)
+    user=models.CharField(max_length=50)
     message=models.CharField(max_length=100)
     created_at=models.CharField(max_length=100)
     def __str__(self):

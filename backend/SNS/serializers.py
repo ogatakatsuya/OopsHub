@@ -67,7 +67,7 @@ class Contest_PostSerializer(serializers.ModelSerializer):
     votes = serializers.SerializerMethodField()
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user_id","id","message","created_at","votes"]
+        fields=["contest_id","user","id","message","created_at","votes"]
     def get_votes(self, obj):
         return obj.votes.count()
 
