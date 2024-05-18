@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import React from "react";
-import {  Box } from "@chakra-ui/react";
-import BottomBar from "./components/BottomBar";
-import UpBar from "./components/UpBar";
-import { useAuthContext } from "../auth_provider/AuthProvider";
-import Spininng from "../components/Spininng";
+import React from 'react'
+import { Box } from '@chakra-ui/react'
+import BottomBar from './components/BottomBar'
+import UpBar from './components/UpBar'
+import { useAuthContext } from '../auth_provider/AuthProvider'
+import Spininng from '../components/Spininng'
 
-export default function MypageLayout({ children }) {
-  const { user } = useAuthContext();
+export default function MypageLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAuthContext()
 
   // useEffect(() => {
   //     if (!user) {
@@ -21,12 +21,14 @@ export default function MypageLayout({ children }) {
       {user ? (
         <>
           <UpBar />
-          {children}
+          <Box pt={'56px'} pb={'60px'}>
+            {children}
+          </Box>
           <BottomBar />
         </>
       ) : (
         <Spininng />
       )}
     </Box>
-  );
+  )
 }
