@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Icon, IconProps } from "@chakra-ui/react";
+import { Icon, IconProps, Heading, Text, Stack, Button,Flex, Container } from "@chakra-ui/react";
+import ShowIndex from "./Index";
 
 export default function Illustration(props: IconProps) {
   return (
