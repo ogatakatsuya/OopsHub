@@ -81,7 +81,9 @@ class ContestSerializer(serializers.ModelSerializer):
         )
         return contest
     def get_available(self,obj):
-        now=datetime.datetime.now(timezone.utc)
+        tokyo_timezone = datetime.timezone(datetime.timedelta(hours=9))
+        now_utc=datetime.datetime.now(timezone.utc)
+        now = now_utc.astimezone(tokyo_timezone)
         print(now)
         if obj.deadline.timestamp()>=now.timestamp():
             return True
