@@ -27,7 +27,7 @@ export default function Introduction() {
           fontSize={{ base: "3xl", sm: "4xl", md: "6xl" }}
           lineHeight={"110%"}
         >
-          失敗から始まる出会い{" "}
+          OopsHub{" "}
         </Heading>
         <Text
           as={"span"}
