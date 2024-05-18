@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { useDisclosure } from "@chakra-ui/react";
 import SubmitMordal from "../components/SubmitMordal";
 
-import SubimitButton from "../components/SubimitButton";
+
 
 interface ContestProps {
     params: {
@@ -52,6 +52,9 @@ const Contest = ({ params }: ContestProps) => {
                         <Text rounded={'md'} px={2} py={1}>
                         {item["message"]}
                         </Text>
+                        <Text fontSize="sm" my={4}>
+                        {item["created_at"]}
+                        </Text>
                     </Box>
                     </Flex>
                 </Box>
@@ -67,7 +70,7 @@ const Contest = ({ params }: ContestProps) => {
                 mx="24px">
             コンテストに投稿する
         </Button>
-        <SubmitMordal isOpen={isOpen} onClose={onClose} onOpen={onOpen} contest_id={params.id}/>
+        <SubmitMordal isOpen={isOpen} onClose={onClose} onOpen={onOpen} contest_id={params.id} setValue={setValue}/>
         </>
     );
 }
