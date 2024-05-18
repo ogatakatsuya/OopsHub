@@ -56,7 +56,7 @@ const Contest = ({ params }: ContestProps) => {
                         <Text fontSize="sm" my={4}>
                         {item["created_at"]}
                         </Text>
-                        <VoteButton />
+                        <VoteButton votes={item["votes"]} post_id={item["id"]}/>
                     </Box>
                     </Flex>
                 </Box>
