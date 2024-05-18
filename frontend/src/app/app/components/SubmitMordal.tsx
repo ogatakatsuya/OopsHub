@@ -25,6 +25,7 @@ import {
 import ApiButton from "@/app/components/ApiButton";
 import React from "react";
 import { useAuthContext } from "@/app/auth_provider/AuthProvider";
+import { AiOutlineAliwangwang } from "react-icons/ai";
 
 type Inputs = {
 text: string;
@@ -95,10 +96,11 @@ return (
         )}
         {solution ? (
         <>
-            <Flex my={4}>
+            <Flex my={4} alignItems="start">
             <Box>
                 <Text>{solution}</Text>
             </Box>
+            <AiOutlineAliwangwang />
             </Flex>
             <ApiButton text={text} solution={solution} setText={setText} setSolution={setSolution} onClose={onClose}/>
         </>

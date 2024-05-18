@@ -1,6 +1,6 @@
 "use client";
 
-import { CardHeader, StackDivider, Card, CardBody, Stack, Link } from "@chakra-ui/react"
+import { CardHeader, StackDivider, Card, CardBody, Stack, Link, CardFooter, Button, Heading } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import BackButton from "@/app/components/BackButton";
 import MypageLayout from "../layout";
@@ -33,22 +33,22 @@ const Contest = () => {
     }, [contest]);
     return (
         <MypageLayout>
-        <Card my={4}>
-            <CardHeader>開催中のコンテスト</CardHeader>
+        <Stack divider={<StackDivider/>} spacing='4'>
+        {contest.map((item) => (
+            <Card key={item["id"]}>
+            <CardHeader>
+                <Heading size='md'>{item["name"]}</Heading>
+            </CardHeader>
             <CardBody>
-                <Stack divider={<StackDivider/>} spacing='4'>
-                {contest.map((item) => (
-                    <Box key={item["id"]}>
-                        <Flex>
-                            <Link rounded={'md'} px={2} py={1} href={`/app/contest/${item["id"]}`}>
-                                {item["name"]}
-                            </Link>
-                        </Flex>
-                    </Box>
-                ))}
-                </Stack>
+                <Text>開始 2024/03/10</Text>
+                <Text>締切 2024/05/30</Text>
             </CardBody>
-        </Card>
+            <CardFooter>
+                <Button as="a" href={`/app/contest/${item["id"]}`}>参加</Button>
+            </CardFooter>
+            </Card>
+        ))}
+        </Stack>
         <BackButton />
         </MypageLayout>
     )

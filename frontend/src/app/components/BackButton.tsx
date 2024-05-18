@@ -7,7 +7,7 @@ const BackButton = () => {
         router.push("/app/home");
     }
     return(
-        <Button onClick={clickHandler}>
+        <Button onClick={clickHandler} my={4}>
             戻る
         </Button>
     )
