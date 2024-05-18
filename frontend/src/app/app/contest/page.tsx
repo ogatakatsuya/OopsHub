@@ -2,6 +2,7 @@
 
 import { CardHeader, StackDivider, Card, CardBody, Stack, Link } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
+import BackButton from "@/app/components/BackButton";
 
 import { Box, Text, Flex } from "@chakra-ui/react";
 
@@ -47,6 +48,7 @@ const Contest = () => {
                 </Stack>
             </CardBody>
         </Card>
+        <BackButton />
         </>
     )
 }

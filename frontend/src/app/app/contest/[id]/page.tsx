@@ -4,6 +4,7 @@ import { Box, Text, Flex, Card, CardHeader, Stack, StackDivider, CardBody, Headi
 import { useState, useEffect } from "react"
 import { useDisclosure } from "@chakra-ui/react";
 import SubmitMordal from "../components/SubmitMordal";
+import VoteButton from "../components/VoteButton";
 
 
 
@@ -55,6 +56,7 @@ const Contest = ({ params }: ContestProps) => {
                         <Text fontSize="sm" my={4}>
                         {item["created_at"]}
                         </Text>
+                        <VoteButton />
                     </Box>
                     </Flex>
                 </Box>
