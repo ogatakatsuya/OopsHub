@@ -17,10 +17,9 @@ class Post(models.Model):
         return self.content
 
 class Contest(models.Model):
-    created_at=models.DateTimeField()
+    created_at=models.CharField(max_length=50)
     name=models.CharField(max_length=50)
     deadline=models.DateTimeField()
-    available=models.BooleanField()
     def __str__(self):
         return self.name
 

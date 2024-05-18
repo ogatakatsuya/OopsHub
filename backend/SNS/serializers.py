@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution,Vote
 import datetime
+from datetime import timezone
 class AISolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AISolution
@@ -59,14 +60,34 @@ class PostListSerializer(PostSerializer):
 
 
 class ContestSerializer(serializers.ModelSerializer):
+    created_at=serializers.CharField(max_length=50)
+    name=serializers.CharField(max_length=50)
+    deadline=serializers.DateTimeField()
+    available=serializers.SerializerMethodField()
     class Meta:
         model=Contest
-        fields=["id","created_at","name"]
+        fields=["id","created_at","name","available","deadline"]
+    def create(self,validated_data):
+        # リクエストのフィールド名を変更
+        name = validated_data.pop('name', validated_data.get('name'))
+        created_at = validated_data.pop('created_at', validated_data.get('created_at'))
+        deadline = validated_data.pop('deadline', validated_data.get('deadline'))
+
+        # 新しいPostインスタンスを作成
+        contest = Contest.objects.create(
+            name=name,
+            created_at=created_at,
+            deadline=deadline
+        )
+        return contest
     def get_available(self,obj):
-        now=datetime.datetime.now()
-        if obj.deadline>=now:
+        now=datetime.datetime.now(timezone.utc)
+        print(now)
+        if obj.deadline.timestamp()>=now.timestamp():
             return True
-        return False
+        else:
+            return False
+    
 
 class Contest_PostSerializer(serializers.ModelSerializer):
     votes = serializers.SerializerMethodField()
