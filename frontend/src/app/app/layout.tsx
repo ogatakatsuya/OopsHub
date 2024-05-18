@@ -7,7 +7,7 @@ import UpBar from "./components/UpBar";
 import { useAuthContext } from "../auth_provider/AuthProvider";
 import Spininng from "../components/Spininng";
 
-export default function MypageLayout({ children }) {
+export default function MypageLayout({ children }:{ children: React.ReactNode }) {
   const { user } = useAuthContext();
 
   // useEffect(() => {
@@ -21,7 +21,7 @@ export default function MypageLayout({ children }) {
       {user ? (
         <>
           <UpBar />
-          {children}
+          <main>{children}</main>
           <BottomBar />
         </>
       ) : (

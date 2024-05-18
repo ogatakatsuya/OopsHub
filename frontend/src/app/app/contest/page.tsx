@@ -3,6 +3,7 @@
 import { CardHeader, StackDivider, Card, CardBody, Stack, Link } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import BackButton from "@/app/components/BackButton";
+import MypageLayout from "../layout";
 
 import { Box, Text, Flex } from "@chakra-ui/react";
 
@@ -31,7 +32,7 @@ const Contest = () => {
         console.log(contest); // contestが更新された後にログに出力
     }, [contest]);
     return (
-        <>
+        <MypageLayout>
         <Card my={4}>
             <CardHeader>開催中のコンテスト</CardHeader>
             <CardBody>
@@ -49,7 +50,7 @@ const Contest = () => {
             </CardBody>
         </Card>
         <BackButton />
-        </>
+        </MypageLayout>
     )
 }
 

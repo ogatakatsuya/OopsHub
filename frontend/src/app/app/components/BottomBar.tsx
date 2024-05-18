@@ -5,6 +5,7 @@ import {
   BsLightbulbFill,
   BsBellFill,
 } from "react-icons/bs";
+import ContestButton from "../../components/ContestButton";
 
 export default function BottomBar() {
   return (
@@ -32,18 +33,9 @@ export default function BottomBar() {
           >
             <Icon as={BsFillHouseDoorFill} boxSize={5} />
           </Button>
-          <Button
-            flex={"1"}
-            variant="ghost"
-            width="50px"
-            height="50px"
-            _active={{
-              bg: "gray.300",
-              borderRadius: "50%",
-            }}
-          >
+          <ContestButton>
             <Icon as={BsLightbulbFill} boxSize={5} />
-          </Button>
+          </ContestButton>
           <Button
             flex={"1"}
             variant="ghost"
