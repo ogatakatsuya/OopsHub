@@ -61,9 +61,14 @@ export default function ShowIndex() {
                 </Flex>
                 <Flex alignItems={"start"}>
                   <Box mr={2}>
+                    {item["solution"] ?
+                    <Text bgColor={"gray.200"} rounded={"md"} px={2} py={1}>
+                      {item["solution"]}
+                    </Text> :
                     <Text bgColor={"gray.200"} rounded={"md"} px={2} py={1}>
                       {item["text"]}
                     </Text>
+                  }
                   </Box>
                   <Avatar />
                 </Flex>

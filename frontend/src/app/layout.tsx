@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
-import { AuthProvider } from "@/app/auth_provider/AuthProvider";
 import "./globals.css";
-import { initializeFirebaseApp } from './firebase'
-import { getApp } from "firebase/app";
-import { auth } from "./firebase";
-
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,13 +9,11 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children,}: Readonly<{ children: React.ReactNode; }>) {
-  initializeFirebaseApp();
-  console.log("hello")
   return (
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <AuthProvider>{children}</AuthProvider>
+          {children}
         </Providers>
       </body>
     </html>

@@ -122,7 +122,7 @@ class LLMView(generics.GenericAPIView):
 
 
         # 質問の形式を指定
-        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内以上で提供してください。"
+        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内以上で会話するような口調で提供してください。"
 
         # .envファイルの読み込み
         load_dotenv()
@@ -138,7 +138,7 @@ class LLMView(generics.GenericAPIView):
 
         try:
             response = completion(
-                model="openrouter/openchat/openchat-7b:free",
+                model="gpt-3.5-turbo",
                 messages=[{"content": question, "role": "user"}],
             ) # API KEYは.envで設定されている
         except Exception as e:
