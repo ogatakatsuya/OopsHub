@@ -18,7 +18,7 @@ import { auth } from '@/app/firebase';
 import { create } from 'domain';
 import { useRouter } from 'next/navigation';
 
-const SubmitMordal = ({ isOpen, onClose, onOpen, contest_id, setValue }) => {
+const SubmitMordal = ({ isOpen, onClose, onOpen, contest_id }) => {
     
     const router = useRouter();
     const [ text, setText ] = useState("");
@@ -39,7 +39,7 @@ const SubmitMordal = ({ isOpen, onClose, onOpen, contest_id, setValue }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ user_id: user_id, text: text, created_at: created_at }),
+            body: JSON.stringify({ user: user_id, text: text, created_at: created_at }),
             });
 
             if (!res.ok) {

@@ -36,7 +36,7 @@ const Contest = () => {
         <Stack>
         {contest.filter(item => item["available"]).map((item) => (
             <Flex justifyContent="center" my={4} key={item["contest_id"]}>
-                <Card width="50%">
+                <Card width={{sm:"80%", md:"70%", lg:"60%", xl:"50%"}}>
                     <CardHeader>
                         <Heading size='lg'>{item["name"]}</Heading>
                     </CardHeader>
@@ -57,7 +57,7 @@ const Contest = () => {
         <Stack>
         {contest.filter(item => !item["available"]).map((item) => (
             <Flex justifyContent="center" my={4} key={item["contest_id"]}>
-                <Card width="50%">
+                <Card width={{sm:"80%", md:"70%", lg:"60%", xl:"50%"}}>
                     <CardHeader>
                         <Heading size='lg'>{item["name"]}</Heading>
                     </CardHeader>
