@@ -16,7 +16,7 @@ const Contest = () => {
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    setContest(data.message);
+                    setContest(data.contests);
                 } else {
                     console.error("Error fetching tasks:", res.statusText);
                 }
@@ -32,20 +32,46 @@ const Contest = () => {
     }, [contest]);
     return (
         <>
-        <Stack divider={<StackDivider/>} spacing='4'>
-        {contest.map((item) => (
-            <Card key={item["id"]}>
-            <CardHeader>
-                <Heading size='md'>{item["name"]}</Heading>
-            </CardHeader>
-            <CardBody>
-                <Text>開始 2024/03/10</Text>
-                <Text>締切 2024/05/30</Text>
-            </CardBody>
-            <CardFooter>
-                <Button as="a" href={`/app/contest/${item["id"]}`}>参加</Button>
-            </CardFooter>
-            </Card>
+        <Heading textAlign="center" py={4}>開催中のコンテスト</Heading>
+        <Stack>
+        {contest.filter(item => item["available"]).map((item) => (
+            <Flex justifyContent="center" my={4} key={item["contest_id"]}>
+                <Card width="50%">
+                    <CardHeader>
+                        <Heading size='lg'>{item["name"]}</Heading>
+                    </CardHeader>
+                    <CardBody>
+                        <Text size="md">開始 2024/03/10</Text>
+                        <Text>締切 2024/05/30</Text>
+                    </CardBody>
+                    <CardFooter>
+                        <Flex justifyContent="flex-end" width="100%">
+                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>参加</Button>
+                        </Flex>
+                    </CardFooter>
+                </Card>
+            </Flex>
+        ))}
+        </Stack>
+        <Heading textAlign="center" py={4}>過去のコンテスト</Heading>
+        <Stack>
+        {contest.filter(item => !item["available"]).map((item) => (
+            <Flex justifyContent="center" my={4} key={item["contest_id"]}>
+                <Card width="50%">
+                    <CardHeader>
+                        <Heading size='lg'>{item["name"]}</Heading>
+                    </CardHeader>
+                    <CardBody>
+                        <Text size="md">開始 2024/03/10</Text>
+                        <Text>締切 2024/05/30</Text>
+                    </CardBody>
+                    <CardFooter>
+                        <Flex justifyContent="flex-end" width="100%">
+                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>参加</Button>
+                        </Flex>
+                    </CardFooter>
+                </Card>
+            </Flex>
         ))}
         </Stack>
         <BackButton />

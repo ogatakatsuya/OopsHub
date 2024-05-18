@@ -260,21 +260,13 @@ class LearnedCreateDestroyView(ButtonCreateDestroyView):
 def contest(request):
     contests=Contest.objects.all()
     if request.method=="GET":
-        # JSONデータをPythonの辞書として定義
-        contests_data = {
-            "contests": [
-                {"contest_id": 1, "name": "Spring Coding Competition", "available": True},
-                {"contest_id": 2, "name": "Summer Hackathon", "available": False},
-                {"contest_id": 3, "name": "Autumn Data Challenge", "available": True},
-                {"contest_id": 4, "name": "Winter Algorithm Battle", "available": True}
-            ]
-        }
-        # Responseオブジェクトにデータを渡して返す
-        return Response(contests_data)
-        # 本当はこっち 
         serializer_get = ContestSerializer(contests, many=True)
-        contests = serializer_get.data
-        return Response({"message": contests})
+        contest_serializers = serializer_get.data
+        contests=[]
+        for contest_serializer in contest_serializers:
+            contest_serializer["contest_id"]=contest_serializer.pop("id")
+            contests.append(contest_serializer)
+        return Response({"contests": contests})
     
     if request.method=="POST":
         data=request.data.copy()
