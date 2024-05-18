@@ -42,7 +42,8 @@ const Contest = ({ params }: ContestProps) => {
         <>
         <Card>
         <CardHeader>
-            <Heading size='md'>コンテスト{params.id} 詳細ページ</Heading>
+            <Heading size='md'>お題 : {value[0]["title"] &&
+            <Text>{value[0]["title"]}</Text>}</Heading>
         </CardHeader>
 
         <CardBody>

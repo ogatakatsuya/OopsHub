@@ -63,19 +63,19 @@ const Register = () => {
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
-      {" "}
       <Box
         rounded={"lg"}
         bg={useColorModeValue("white", "gray.700")}
         boxShadow={"lg"}
-        p={10}
-        minW={"500px"}
+        p={8}
+        w={{ base: "90%", sm: "80%", md: "60%", lg: "50%", xl: "40%" }}
+        maxW={"500px"}
       >
         <Heading fontSize={"2xl"} textAlign={"center"} py={4}>
           Get started
         </Heading>
         <Text fontSize={"1xl"} color={"gray.600"} textAlign={"center"}>
-          Start setting up your account ✌️{" "}
+          Start setting up your account ✌️
         </Text>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl id="email" isRequired isInvalid={!!errors.email} pt={6}>
@@ -160,4 +160,5 @@ const Register = () => {
     </Flex>
   );
 };
+
 export default Register;
