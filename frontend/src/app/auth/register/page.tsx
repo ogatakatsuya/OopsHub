@@ -12,14 +12,12 @@ import {
   Flex,
   Box,
   InputGroup,
-  HStack,
   InputRightElement,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 
-//import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-//{showPassword ? <ViewIcon /> : <ViewOffIcon />}
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -127,7 +125,7 @@ const Register = () => {
                     setShowPassword((showPassword) => !showPassword)
                   }
                 >
-                  見
+                  {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                 </Button>
               </InputRightElement>
             </InputGroup>

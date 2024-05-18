@@ -11,10 +11,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned,Vote, AISolution
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer
 import os
 from dotenv import load_dotenv
 from litellm import completion
+import time
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -41,10 +42,19 @@ def App(request):
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
         data['content'] = data.pop('text', None)
+        solution_content = data['solution']
         serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_post.is_valid():  # データの検証
-            serializer_post.save()  # データの保存
-            return JsonResponse({"message": "Success!"}, status=201)
+            post = serializer_post.save()  # データの保存
+            # solutionデータがある場合は、AISolutionとして保存
+            if solution_content is not None:
+                solution_data = {'content': solution_content, 'post': post.id}
+                serializer_solution = AISolutionSerializer(data=solution_data)
+                if serializer_solution.is_valid():
+                    serializer_solution.save()  # AISolutionデータの保存
+                else:
+                    return JsonResponse(serializer_solution.errors, status=400)
+            return JsonResponse({"message": "Success!","solution":solution_content}, status=201)
         return JsonResponse(serializer_post.errors, status=400)
         
     if request.method=="PUT":
@@ -234,6 +244,7 @@ def contest(request):
         serializer_contest = ContestSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_contest.is_valid():  # データの検証
             serializer_contest.save()  # データの保存
+            data=serializer_contest.data
             return JsonResponse({"message": "success"}, status=201)
         return JsonResponse(serializer_contest.errors, status=400)
     
@@ -263,10 +274,12 @@ def contestroom(request,contest_id):
         data["contest_id"]=contest_id
         data["message"]=data.get("text")
         data["user_id"]=data.get("user_id")
+        data["created_at"]=data.get("created_at")
         serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message":"success"})
+            data=serializer.data
+            return JsonResponse({"message":data["created_at"]})
 
 
 class PostDeleteView(generics.GenericAPIView):

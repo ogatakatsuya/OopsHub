@@ -1,17 +1,7 @@
 "use client";
 
-import {
-  Flex,
-  Container,
-  Heading,
-  Stack,
-  Text,
-  Button,
-  Icon,
-  IconProps,
-} from "@chakra-ui/react";
 import React from "react";
-import ShowIndex from "./Index";
+import { Icon, IconProps } from "@chakra-ui/react";
 
 export default function Introduction() {
   return (
@@ -889,4 +879,4 @@ export const Illustration = (props: IconProps) => {
       </defs>
     </Icon>
   );
-};
+}

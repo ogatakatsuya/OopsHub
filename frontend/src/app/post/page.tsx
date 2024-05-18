@@ -1,18 +1,28 @@
-'use client';
+"use client";
 
 import { useState } from "react";
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Input, Button, FormErrorMessage, FormLabel, Heading, FormControl, Text, Textarea, Flex, Box } from '@chakra-ui/react';
-import { auth } from "../../firebase";
-import ApiButton from "@/app/components/ApiButton";
-import { create } from "domain";
+import { useForm, SubmitHandler } from "react-hook-form";
+import {
+  Button,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  FormControl,
+  Text,
+  Textarea,
+  Box,
+  Flex,
+} from "@chakra-ui/react";
+import { auth } from "../firebase";
+import ApiButton from "../components/ApiButton";
+import React from "react";
 
 type Inputs = {
   text: string;
 };
 
 export default function Home() {
-  const [ solution, setSolution ] = useState("");
+  const [solution, setSolution] = useState("");
   const {
     register,
     handleSubmit,
@@ -21,12 +31,13 @@ export default function Home() {
 
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const api:SubmitHandler<Inputs> = async (value) => {
+  const api: SubmitHandler<Inputs> = async (value) => {
     try {
-      const res = await fetch("http://localhost:8000/api/", { // ポート番号を修正
+      const res = await fetch("http://localhost:8000/api/", {
+        // ポート番号を修正
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ text: value.text }),
       });
@@ -43,7 +54,7 @@ export default function Home() {
       setSubmitError("ネットワークエラーです。後で再試行してください。");
       console.error("ネットワークエラー:", err);
     }
-  }
+  };
 
   // const onSubmit: SubmitHandler<Inputs> = async (value) => {
   //   const user_id = auth.currentUser?.uid; // ユーザーIDを正しく取得
@@ -82,15 +93,13 @@ export default function Home() {
   return (
     <>
       <Heading mb={4}>失敗談共有アプリ</Heading>
-      <Text fontSize='xl'>
-        失敗談を共有する事ができるアプリです😃
-      </Text>
+      <Text fontSize="xl">失敗談を共有する事ができるアプリです😃</Text>
       <form onSubmit={handleSubmit(api)}>
         <FormControl isInvalid={!!errors.text}>
           <FormLabel>失敗談：</FormLabel>
           <Textarea
             {...register("text", {
-              required: "失敗談を入力してください．"
+              required: "失敗談を入力してください．",
             })}
           />
           <FormErrorMessage>
@@ -102,26 +111,28 @@ export default function Home() {
             {submitError}
           </Text>
         )}
-        {solution ? 
-        <>
-        <Flex my={4}>
-          <Box>
-            <Text>{solution}</Text>
-          </Box>
-        </Flex>
-        <ApiButton />
-        </>:
-        <>
-        <Button
-          size='lg'
-          colorScheme='green'
-          my='24px'
-          type="submit"
-          isLoading={isSubmitting}
-        >
-        AIに相談する
-        </Button>
-        </>}
+        {solution ? (
+          <>
+            <Flex my={4}>
+              <Box>
+                <Text>{solution}</Text>
+              </Box>
+            </Flex>
+            <ApiButton />
+          </>
+        ) : (
+          <>
+            <Button
+              size="lg"
+              colorScheme="green"
+              my="24px"
+              type="submit"
+              isLoading={isSubmitting}
+            >
+              AIに相談する
+            </Button>
+          </>
+        )}
       </form>
     </>
   );

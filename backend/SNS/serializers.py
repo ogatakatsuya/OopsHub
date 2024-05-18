@@ -4,7 +4,7 @@ from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned
 class AISolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AISolution
-        fields = ['content']
+        fields = ['content','post']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,7 +17,7 @@ class PostSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     dont_minds = serializers.SerializerMethodField()
     learneds = serializers.SerializerMethodField()
-    solution = serializers.SerializerMethodField()
+    solution = serializers.SerializerMethodField(default=None)
     class Meta:
         model = Post
         fields = ["id","content","created_at","user","likes","dont_minds","learneds","solution"]
@@ -66,7 +66,7 @@ class ContestSerializer(serializers.ModelSerializer):
 class Contest_PostSerializer(serializers.ModelSerializer):
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user_id","id","message"]
+        fields=["contest_id","user_id","id","message","created_at"]
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
