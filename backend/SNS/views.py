@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned,Vote, AISolution
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer
 import os
 from dotenv import load_dotenv
 from litellm import completion
@@ -198,7 +198,7 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
 #format：ボタンがどういったものに対して押されるか
 #serializer_format:formatのシリアライザー
 class VoteCreateDestroyView(ButtonCreateDestroyView):
-    serializer_class = LikeSerializer
+    serializer_class = VoteSerializer
     field_name = 'votes'
     format=Contest_Post
     serializer_format=Contest_PostSerializer
