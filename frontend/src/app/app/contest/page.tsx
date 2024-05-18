@@ -46,7 +46,7 @@ const Contest = () => {
                     </CardBody>
                     <CardFooter>
                         <Flex justifyContent="flex-end" width="100%">
-                            <Button as="a" href={`/app/contest/${item["id"]}`}>参加</Button>
+                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>参加</Button>
                         </Flex>
                     </CardFooter>
                 </Card>
@@ -67,7 +67,7 @@ const Contest = () => {
                     </CardBody>
                     <CardFooter>
                         <Flex justifyContent="flex-end" width="100%">
-                            <Button as="a" href={`/app/contest/${item["id"]}`}>参加</Button>
+                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>参加</Button>
                         </Flex>
                     </CardFooter>
                 </Card>
