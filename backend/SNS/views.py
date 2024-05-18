@@ -302,34 +302,6 @@ def contestroom(request,contest_id):
     
     contest_posts=Contest_Post.objects.filter(contest_id=contest_id).all().order_by("-id")#古い順に並べてある
     if request.method=="GET":
-        # JSONデータの定義
-        data = {
-            "message": [
-                {
-                    "contest_id": "1",
-                    "user": "1",
-                    "id": 14,
-                    "message": "恥ずかしい",
-                    "created_at": "2024/04/05",
-                    "votes": 0,
-                    "title": "恥ずかしい失敗談"
-                },
-                {
-                    "contest_id": "1",
-                    "user": "vkko7wsEm9XquD4JMChRcR7ouS82",
-                    "id": 9,
-                    "message": "テスト投稿1",
-                    "created_at": "2024/05/18 14:18:09",
-                    "votes": 0,
-                    "title": "初めての失敗"
-                }
-            ],
-            "title": "春のコーディングコンテスト",
-            "vote": 123
-        }
-
-        # Response オブジェクトでデータを返す
-        return Response(data)
         serializer=Contest_PostSerializer(contest_posts,many=True)
         votes=[getattr(post, "votes").count() for post in contest_posts]
         contest_posts=serializer.data
