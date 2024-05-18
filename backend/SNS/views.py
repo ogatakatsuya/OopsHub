@@ -199,7 +199,7 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
 #serializer_format:formatのシリアライザー
 class VoteCreateDestroyView(ButtonCreateDestroyView):
     serializer_class = LikeSerializer
-    field_name = 'likes'
+    field_name = 'votes'
     format=Contest_Post
     serializer_format=Contest_PostSerializer
     def get_model(self):
@@ -209,7 +209,7 @@ class LikeCreateDestroyView(ButtonCreateDestroyView):
     serializer_class = LikeSerializer
     field_name = 'likes'
     format=Post
-    serialize_format=PostSerializer
+    serializer_format=PostSerializer
     def get_model(self):
         return Like
 
@@ -267,7 +267,8 @@ def contestroom(request,contest_id):
     if request.method=="GET":
         serializer=Contest_PostSerializer(contest_posts,many=True)
         contest_posts=serializer.data
-        return JsonResponse({"message":contest_posts,"title":contest.name})
+        votes=[getattr(post,"votes").count() for post in contest_posts]
+        return JsonResponse({"message":contest_posts,"title":contest.name,"vote":votes})
     
     if request.method=="POST":
         data=request.data.copy()
