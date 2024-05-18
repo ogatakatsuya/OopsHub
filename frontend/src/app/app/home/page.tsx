@@ -7,6 +7,7 @@ import { useAuthContext } from "../../auth_provider/AuthProvider";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import Spininng from "../../components/Spininng";
+import PostButton from "../home/PostButton";
 
 const Home = () => {
   const { user } = useAuthContext();
@@ -21,6 +22,7 @@ const Home = () => {
     <Box>
       {user ? (
         <>
+          <AppBar />
           <Button
             size="lg"
             colorScheme="green"
@@ -30,7 +32,7 @@ const Home = () => {
           >
             失敗談を投稿する
           </Button>
-          <AppBar />
+          <PostButton />
         </>
       ) : (
         <Spininng />

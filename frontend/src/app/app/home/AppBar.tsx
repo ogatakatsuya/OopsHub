@@ -71,7 +71,7 @@ export default function AppBar() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "black")} px={5}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+        <Flex h={14} alignItems={"center"} justifyContent={"space-between"}>
           <Menu>
             <MenuButton
               as={Button}
@@ -97,7 +97,7 @@ export default function AppBar() {
           <Text fontSize="xl" fontWeight="bold" ml={4}>
             MyApp
           </Text>
-          <SettingsIcon />
+          <SettingsIcon boxSize={5} />
         </Flex>
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
@@ -117,17 +117,17 @@ export default function AppBar() {
         width="100%"
         bg={useColorModeValue("gray.100", "gray.900")}
         boxShadow="lg"
-        p={2}
+        px={2}
       >
-        <Flex justifyContent="space-around" alignItems="center">
+        <Flex h={14} justifyContent="space-around" alignItems="center">
           <Button>
-            <Icon as={BsFillHouseDoorFill} />
+            <Icon as={BsFillHouseDoorFill} boxSize={5} />
           </Button>
           <Button>
-            <Icon as={BsLightbulbFill} />
+            <Icon as={BsLightbulbFill} boxSize={5} />
           </Button>
           <Button>
-            <Icon as={BsBellFill} />
+            <Icon as={BsBellFill} boxSize={5} />
           </Button>
         </Flex>
       </Box>
