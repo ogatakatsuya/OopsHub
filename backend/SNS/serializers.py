@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution
+from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution,Vote
 
 class AISolutionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -64,9 +64,12 @@ class ContestSerializer(serializers.ModelSerializer):
         fields=["id","created_at","name"]
 
 class Contest_PostSerializer(serializers.ModelSerializer):
+    votes = serializers.SerializerMethodField()
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user_id","id","message","created_at"]
+        fields=["contest_id","user_id","id","message","created_at","votes"]
+    def get_votes(self, obj):
+        return obj.votes.count()
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
@@ -86,7 +89,7 @@ class VoteSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
     post = serializers.PrimaryKeyRelatedField(queryset=Contest_Post.objects.all())
     class Meta:
-        model = DontMind
+        model = Vote
         fields = ['id', 'user', 'post']
 
 class LearnedSerializer(serializers.ModelSerializer):

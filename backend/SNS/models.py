@@ -57,7 +57,7 @@ class DontMind(Button):
         return f'{self.user} cheeruped {self.post}'
 
 class Vote(Button):
-    post = models.ForeignKey(Contest_Post, on_delete=models.CASCADE,related_name='dont_minds')
+    post = models.ForeignKey(Contest_Post, on_delete=models.CASCADE,related_name='votes')
     def __str__(self):
         return f'{self.user} cheeruped {self.post}'
  
