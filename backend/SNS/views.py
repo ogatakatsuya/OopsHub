@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned,Vote, AISolution
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer
 import os
 from dotenv import load_dotenv
 from litellm import completion
@@ -117,17 +117,42 @@ class LLMView(generics.GenericAPIView):
         text = request.data.get('text', '')
 
         # データの検証
-        if not text:
+        if text=='':
             return Response({"error": "Both text and post_id are required."}, status=status.HTTP_400_BAD_REQUEST)
 
 
         # 質問の形式を指定
-        question = f"次の失敗について：「{text}」、具体的な解決策と励ましの言葉を3行以内以上で提供してください。"
+        example = """
+        入力例1:
+        本当にやりたいことと向き合っていなかった。
 
-        # .envファイルの読み込み
-        load_dotenv()
+        出力例1:
+        小さな一歩から始めよう！まずは好きなことを少しずつやってみる。自分を信じて！みんな失敗するんだよ！大丈夫、君ならきっと成功できる！ファイト！ 💪😊
+
+        入力例2:
+        友達が大事にしているものを壊してしまった。
+
+        出力例2:
+        失敗は誰にでも起こるもの。まずは正直に事情を話して謝罪しよう。壊れたものが修理可能か確認するか、新しいものを一緒に選びに行こう。心からの行動が信頼を取り戻す第一歩だよ！😊
+
+
+        入力例3:
+        大事な書類を無くしてしまった。
+
+        出力例3:
+        もう一度冷静になって、落としちゃった書類を探してみよう。もし見つからなければ、関係者に正直に報告して対策を一緒に考えよう。大丈夫、失敗は次の成功へのステップだからさ！✊😊
 
         """
+        style = """
+        出力：励ましの言葉や解決策だけを書く
+        """
+
+        question = "失敗："+text+"""
+        \n要求：この失敗に対して、解決策と励ましの言葉だけを4行以内で考えてください。これらの文章は失敗と一緒にSNSに投稿されます。また、親友のような口調で論理的に答えて。入力例は出力せずに、出力だけして。
+        """+example+style
+
+        """
+        モデルを以下から選択、OPENAIとopenrouterなら使用可能
         model=
 
         "openrouter/openchat/openchat-7b:free"  # 無料
@@ -138,7 +163,7 @@ class LLMView(generics.GenericAPIView):
 
         try:
             response = completion(
-                model="openrouter/openchat/openchat-7b:free",
+                model="gpt-4o",
                 messages=[{"content": question, "role": "user"}],
             ) # API KEYは.envで設定されている
         except Exception as e:
@@ -198,8 +223,8 @@ class ButtonCreateDestroyView(generics.GenericAPIView):
 #format：ボタンがどういったものに対して押されるか
 #serializer_format:formatのシリアライザー
 class VoteCreateDestroyView(ButtonCreateDestroyView):
-    serializer_class = LikeSerializer
-    field_name = 'likes'
+    serializer_class = VoteSerializer
+    field_name = 'votes'
     format=Contest_Post
     serializer_format=Contest_PostSerializer
     def get_model(self):
@@ -209,7 +234,7 @@ class LikeCreateDestroyView(ButtonCreateDestroyView):
     serializer_class = LikeSerializer
     field_name = 'likes'
     format=Post
-    serialize_format=PostSerializer
+    serializer_format=PostSerializer
     def get_model(self):
         return Like
 
@@ -229,15 +254,19 @@ class LearnedCreateDestroyView(ButtonCreateDestroyView):
     def get_model(self):
         return Learned
 
-####ここからチャットアプリの実装###
+####ここからコンテストの実装###
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
 def contest(request):
     contests=Contest.objects.all()
     if request.method=="GET":
         serializer_get = ContestSerializer(contests, many=True)
-        contests = serializer_get.data
-        return Response({"message": contests})
+        contest_serializers = serializer_get.data
+        contests=[]
+        for contest_serializer in contest_serializers:
+            contest_serializer["contest_id"]=contest_serializer.pop("id")
+            contests.append(contest_serializer)
+        return Response({"contests": contests})
     
     if request.method=="POST":
         data=request.data.copy()
@@ -267,7 +296,7 @@ def contestroom(request,contest_id):
     if request.method=="GET":
         serializer=Contest_PostSerializer(contest_posts,many=True)
         contest_posts=serializer.data
-        return JsonResponse({"message":contest_posts,"title":contest.name})
+        return JsonResponse({"message":contest_posts,"title":contest.name,"created_at":contest.created_at,"deadline":contest.deadline})
     
     if request.method=="POST":
         data=request.data.copy()
@@ -282,12 +311,8 @@ def contestroom(request,contest_id):
             return JsonResponse({"message":data["created_at"]})
 
 
-class PostDeleteView(generics.GenericAPIView):
-    def get_model(self):
-        raise NotImplementedError("Subclasses must implement this method.")
-    
+class PostDeleteView(generics.GenericAPIView):    
     def get(self,request,*args,**kwargs):
-        user_id = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         contest_id=self.kwargs.get("contest_id")
         post=Contest_Post.objects.filter(id=post_id,contest_id=contest_id).all().first()
@@ -296,11 +321,27 @@ class PostDeleteView(generics.GenericAPIView):
         return JsonResponse({"message":"Post not exist"})
     
     def delete(self,request,*args,**kwargs):
-        user_id = request.data.get('user')
         post_id = self.kwargs.get('post_id')
         contest_id=self.kwargs.get("contest_id")
-        post = get_object_or_404(Contest_Post, post_id=post_id,contest_id=contest_id)
-        instance = self.get_model().objects.filter(user_id=user_id, post=post).first()
+        post = get_object_or_404(Contest_Post, id=post_id,contest_id=contest_id)
+        instance = Contest_Post.objects.filter(id=post_id,contest_id=contest_id).first()
+        if instance:
+            instance.delete()
+            return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "the post does not exist"}, status=status.HTTP_404_NOT_FOUND)
+
+class ContestDeleteView(generics.GenericAPIView):  
+    def get(self,request,*args,**kwargs):
+        contest_id=self.kwargs.get("contest_id")
+        contest=Contest.objects.filter(id=contest_id).all().first()
+        if contest:
+            return JsonResponse({"message":"success"})
+        return JsonResponse({"message":"Contest not exist"})
+    
+    def delete(self,request,*args,**kwargs):
+        contest_id=self.kwargs.get("contest_id")
+        contest = get_object_or_404(Contest,id=contest_id)
+        instance = Contest.objects.filter(id=contest_id).first()
         if instance:
             instance.delete()
             return Response({"message": "delete success"}, status=status.HTTP_204_NO_CONTENT)

@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution
-
+from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution,Vote
+import datetime
+from datetime import timezone
 class AISolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AISolution
@@ -59,14 +60,44 @@ class PostListSerializer(PostSerializer):
 
 
 class ContestSerializer(serializers.ModelSerializer):
+    created_at=serializers.CharField(max_length=50)
+    name=serializers.CharField(max_length=50)
+    deadline=serializers.DateTimeField()
+    available=serializers.SerializerMethodField()
     class Meta:
         model=Contest
-        fields=["id","created_at","name"]
+        fields=["id","created_at","name","available","deadline"]
+    def create(self,validated_data):
+        # リクエストのフィールド名を変更
+        name = validated_data.pop('name', validated_data.get('name'))
+        created_at = validated_data.pop('created_at', validated_data.get('created_at'))
+        deadline = validated_data.pop('deadline', validated_data.get('deadline'))
+
+        # 新しいPostインスタンスを作成
+        contest = Contest.objects.create(
+            name=name,
+            created_at=created_at,
+            deadline=deadline
+        )
+        return contest
+    def get_available(self,obj):
+        tokyo_timezone = datetime.timezone(datetime.timedelta(hours=9))
+        now_utc=datetime.datetime.now(timezone.utc)
+        now = now_utc.astimezone(tokyo_timezone)
+        print(now)
+        if obj.deadline.timestamp()>=now.timestamp():
+            return True
+        else:
+            return False
+    
 
 class Contest_PostSerializer(serializers.ModelSerializer):
+    votes = serializers.SerializerMethodField()
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user_id","id","message","created_at"]
+        fields=["contest_id","user","id","message","created_at","votes"]
+    def get_votes(self, obj):
+        return obj.votes.count()
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
@@ -86,7 +117,7 @@ class VoteSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
     post = serializers.PrimaryKeyRelatedField(queryset=Contest_Post.objects.all())
     class Meta:
-        model = DontMind
+        model = Vote
         fields = ['id', 'user', 'post']
 
 class LearnedSerializer(serializers.ModelSerializer):

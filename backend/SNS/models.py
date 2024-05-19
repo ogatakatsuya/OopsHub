@@ -19,12 +19,13 @@ class Post(models.Model):
 class Contest(models.Model):
     created_at=models.CharField(max_length=50)
     name=models.CharField(max_length=50)
+    deadline=models.DateTimeField()
     def __str__(self):
         return self.name
 
 class Contest_Post(models.Model):
     contest_id=models.CharField(max_length=50)
-    user_id=models.CharField(max_length=50)
+    user=models.CharField(max_length=50)
     message=models.CharField(max_length=100)
     created_at=models.CharField(max_length=100)
     def __str__(self):
@@ -57,7 +58,7 @@ class DontMind(Button):
         return f'{self.user} cheeruped {self.post}'
 
 class Vote(Button):
-    post = models.ForeignKey(Contest_Post, on_delete=models.CASCADE,related_name='dont_minds')
+    post = models.ForeignKey(Contest_Post, on_delete=models.CASCADE,related_name='votes')
     def __str__(self):
         return f'{self.user} cheeruped {self.post}'
  
