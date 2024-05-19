@@ -32,17 +32,33 @@ const Contest = () => {
     }, [contest]);
     return (
         <>
-        <Heading textAlign="center" py={4}>開催中のコンテスト</Heading>
+        <Flex justify="center" alignItems="center" my={6}>
+        <Heading
+            as={'span'}
+            position={'relative'}
+            _after={{
+            content: "''",
+            width: 'full',
+            height: '30%',
+            position: 'absolute',
+            bottom: 1,
+            left: 0,
+            bg: 'red.200',
+            zIndex: -1,
+            }}>
+                開催中のコンテスト
+        </Heading>
+        </Flex>
         <Stack>
         {contest.filter(item => item["available"]).map((item) => (
             <Flex justifyContent="center" my={4} key={item["contest_id"]}>
-                <Card width="50%">
+                <Card width={{sm:"80%", md:"70%", lg:"60%", xl:"50%"}}>
                     <CardHeader>
                         <Heading size='lg'>{item["name"]}</Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text size="md">開始 2024/03/10</Text>
-                        <Text>締切 2024/05/30</Text>
+                        <Text size="md">開始 : 2024/03/10</Text>
+                        <Text>締切 : 2024/05/30</Text>
                     </CardBody>
                     <CardFooter>
                         <Flex justifyContent="flex-end" width="100%">
@@ -53,21 +69,37 @@ const Contest = () => {
             </Flex>
         ))}
         </Stack>
-        <Heading textAlign="center" py={4}>過去のコンテスト</Heading>
+        <Flex justify="center" alignItems="center" my={6}>
+        <Heading
+            as={'span'}
+            position={'relative'}
+            _after={{
+            content: "''",
+            width: 'full',
+            height: '30%',
+            position: 'absolute',
+            bottom: 1,
+            left: 0,
+            bg: 'blue.200',
+            zIndex: -1,
+            }}>
+                過去のコンテスト
+        </Heading>
+        </Flex>
         <Stack>
         {contest.filter(item => !item["available"]).map((item) => (
             <Flex justifyContent="center" my={4} key={item["contest_id"]}>
-                <Card width="50%">
+                <Card width={{sm:"80%", md:"70%", lg:"60%", xl:"50%"}}>
                     <CardHeader>
                         <Heading size='lg'>{item["name"]}</Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text size="md">開始 2024/03/10</Text>
-                        <Text>締切 2024/05/30</Text>
+                        <Text size="md">開始 : 2024/03/10</Text>
+                        <Text>締切 : 2024/05/30</Text>
                     </CardBody>
                     <CardFooter>
                         <Flex justifyContent="flex-end" width="100%">
-                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>参加</Button>
+                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>結果を見る</Button>
                         </Flex>
                     </CardFooter>
                 </Card>

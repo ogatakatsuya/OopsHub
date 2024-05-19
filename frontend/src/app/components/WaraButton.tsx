@@ -45,6 +45,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, likes }) => {
     }
   }
 
+<<<<<<< HEAD
   return (
     <>
       <Tooltip label="笑った" fontSize="md">
@@ -54,6 +55,16 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, likes }) => {
       </Tooltip>
     </>
   )
+=======
+    return (
+        <>
+            <span>{likeNum}</span>
+            <Button mr={3} size='xs' onClick={toggleLike}>
+                笑った
+            </Button>
+        </>
+    )
+>>>>>>> e9b1cf6ef6119aa72e0a331e25efaa789498f8d6
 }
 
 export default LikeButton

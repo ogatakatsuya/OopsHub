@@ -2,9 +2,12 @@
 
 import { Button, Text } from '@chakra-ui/react'
 import { useState } from 'react'
+<<<<<<< HEAD
 import { BsLightbulb } from 'react-icons/bs'
 import { Tooltip } from '@chakra-ui/react'
 
+=======
+>>>>>>> e9b1cf6ef6119aa72e0a331e25efaa789498f8d6
 import { auth } from '../firebase'
 
 interface LikeButtonProps {
@@ -15,11 +18,11 @@ interface LikeButtonProps {
 const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [learnedNum, setLearnedNum] = useState(learneds)
-  const [liked, setLiked] = useState(false) // いいねの状態を管理するステート
+  const [liked, setLiked] = useState(false)
   const user_id = auth.currentUser?.uid
 
   const toggleLike = async () => {
-    const method = liked ? 'DELETE' : 'POST' // 現在の状態に応じてアクションを切り替える
+    const method = liked ? 'DELETE' : 'POST'
     try {
       const res = await fetch(`http://localhost:8000/learned/${post_id}/`, {
         method: method,
@@ -36,8 +39,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
         const data = await res.json()
         console.log(data)
         setLearnedNum(data.learneds)
-        setLiked(!liked) // いいねの状態を反転
-        setSubmitError(null) // 成功時に以前のエラーをクリア
+        setLiked(!liked)
+        setSubmitError(null)
       }
     } catch (err) {
       setSubmitError('ネットワークエラーです。後で再試行してください。')
@@ -58,3 +61,4 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
 }
 
 export default LikeButton
+

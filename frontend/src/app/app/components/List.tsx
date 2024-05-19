@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Divider, Flex, Avatar, Stack, StackDivider, Box, Text } from '@chakra-ui/react'
 import { useAuthContext } from '@/app/auth_provider/AuthProvider'
-import LikeButton from '../../components/LikeButton'
-import DonmaiButton from '../../components/DonmaiButton'
-import WaraButton from '../../components/WaraButton'
+import LikeButton from '@/app/components/LikeButton'
+import DonmaiButton from '@/app/components/DonmaiButton'
+import WaraButton from '@/app/components/WaraButton'
 
 export default function List() {
   const [value, setValue] = useState([])
