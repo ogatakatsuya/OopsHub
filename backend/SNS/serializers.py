@@ -2,6 +2,7 @@ from rest_framework import serializers
 from SNS.models import User, Post, Contest, Contest_Post, Like, DontMind,Learned, AISolution,Vote
 import datetime
 from datetime import timezone
+from django.utils.timezone import now
 class AISolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = AISolution
@@ -10,7 +11,13 @@ class AISolutionSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields=["id","name","created_at","updated_at"]
+        fields = ["id", "name", "updated_at"]
+        read_only_fields = ['id']  # IDは更新不可とする
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.updated_at = now().strftime('%Y/%m/%d %H:%M:%S')  # 指定された形式で日時を設定
+        instance.save()
+        return instance
 
 class PostSerializer(serializers.ModelSerializer):
     content=serializers.CharField()
