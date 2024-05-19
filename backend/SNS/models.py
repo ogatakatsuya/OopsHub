@@ -42,8 +42,8 @@ class AISolution(models.Model):
         return self.content
 
 class Button(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # user=models.CharField(max_length=100)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user=models.CharField(max_length=100)
     class Meta:
         abstract = True
         unique_together = ('user', 'post')
