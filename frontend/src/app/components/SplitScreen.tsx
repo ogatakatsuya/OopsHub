@@ -14,7 +14,7 @@ import {
     useColorModeValue,
     Avatar,
 } from '@chakra-ui/react';
-
+import { MdHowToVote } from "react-icons/md";
 export default function CallToActionWithVideo() {
     return (
         <>
@@ -127,29 +127,54 @@ export default function CallToActionWithVideo() {
         align={'center'}
         position={'relative'}
         w={'full'}>
-            <Box
-            position={'relative'}
-            height={'320px'}
-            rounded={'2xl'}
-            boxShadow={'2xl'}
-            width={'full'}
-            overflow={'hidden'}>
-                <Stack spacing={4}>
-                    <Flex alignItems="center" mb={4} mt={6} mx={4}>
-                        <Avatar />
-                        <Box ml={3} bg={'gray.100'} p={3} rounded={'lg'}>
-                            <Text>初日からサーバーの設定をいじって、間違えて全体のデータベースを消しちゃったんです。先輩たちにすぐにバックアップを復元してもらったけど、本当に焦りました！</Text>
-                        </Box>
-                    </Flex>
-                    <Flex alignItems="center" justifyContent="flex-end" mb={6} mx={4}>
-                        <Box mr={3} bg={'gray.100'} p={3} rounded={'lg'}>
-                            <Text>バックアップがあってよかったね！次回からは設定を変更する前に必ずバックアップを取る習慣をつけよう。失敗は学びのチャンスだよ！君ならもっと成長できるからね！😊</Text>
-                        </Box>
-                        <Avatar />
-                    </Flex>
+        <Box
+        position={'relative'}
+        height={'320px'}
+        rounded={'2xl'}
+        boxShadow={'2xl'}
+        width={'full'}
+        overflow={'hidden'}>
+        <Stack spacing={4} justify="center" align="center" mt={6}>
+            <Heading size="md" mt={4}>お題 : 面白い失敗談</Heading>
+        </Stack>
+        <Flex
+            direction="column"
+            justify="center"
+            align="center"
+            position="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            p={4}
+            borderTopRadius="2xl"
+        >
+            <Box mx="auto" mt={5} width={['100%', '90%', '80%', '70%']}>
+            <Stack direction="row">
+                <Avatar boxSize={10} />
+                <Flex flex={1} direction="column" alignItems={'start'}>
+                <Stack direction={'row'} alignItems={'center'}>
+                    <Text fontSize={14} fontWeight={'bold'} color="black">
+                    ユーザー名
+                    </Text>
+                    <Text fontSize={12} color="black">2024/04/06</Text>
                 </Stack>
+                <Box>
+                    <Text fontSize={14} px={2} py={1} color="black">
+                    友人が英会話学校でのボランティアに参加した。生徒の一人に「What's up?」と尋ねられ、彼は本気でその意味を解釈して「天井だよ！」と答えた。クラスが爆笑し、その後は「What's going on?」という表現を学んだ。
+                    </Text>
+                </Box>
+                </Flex>
+            </Stack>
+            <Flex justifyContent="flex-end" mt={2}>
+                <Text fontSize={12}>投票する</Text>
+                <MdHowToVote/>
+            </Flex>
             </Box>
         </Flex>
+        </Box>
+
+        </Flex>
+
         </Stack>
     </Container>
         </>
