@@ -114,7 +114,6 @@ const Contest = () => {
             </Flex>
         ))}
         </Stack>
-        <BackButton />
         </>
     )
 }

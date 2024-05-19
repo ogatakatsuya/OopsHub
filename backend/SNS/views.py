@@ -325,7 +325,7 @@ def contestroom(request,contest_id):
         data["contest_id"]=contest_id
         data["message"]=data.pop('text', None)
         data["user"]=data.get("user_id")
-        # data["created_at"]=data.get("created_at")
+        data["created_at"]=data.get("created_at")
         serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
