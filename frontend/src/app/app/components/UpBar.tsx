@@ -121,9 +121,9 @@ const RenameButton = () => {
   const user_id = auth.currentUser?.uid
   const Name = async () => {
     try {
-      const res = await fetch('http://localhost:8000/user', {
+      const res = await fetch('http://localhost:8000/name', {
         // ポート番号を修正
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -134,7 +134,9 @@ const RenameButton = () => {
         const errorData = await res.json()
         setSubmitError(errorData.message || '何か問題が発生しました')
       } else {
-        const data = await res.json()
+        const data = await res.json();
+        onClose();
+        setName("");
       }
     } catch (err) {
       setSubmitError('ネットワークエラーです。後で再試行してください。')
@@ -144,33 +146,27 @@ const RenameButton = () => {
 
   return (
     <>
-      <Box textAlign={'left'} onClick={onOpen} width={'100%'}>
+      <Button textAlign={'center'} onClick={onOpen}>
         名前を変更
-        <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>名前を変更</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <p>{name}</p>
-              <Input
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
-                }}
-              />
-            </ModalBody>
-            <Box textAlign={'end'} mb={2} mr={2}>
-              <Button variant="ghost" mr={2} onClick={onClose}>
-                <Text fontSize={'14px'}>キャンセル</Text>
-              </Button>
-              <Button variant="solid" onClick={Name}>
-                <Text fontSize={'14px'}>決定</Text>
-              </Button>
-            </Box>
-          </ModalContent>
-        </Modal>
-      </Box>
+      </Button>
+      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>名前を変更</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input value={name} onChange={(e) => {setName(e.target.value)}}/>
+          </ModalBody>
+          <Box textAlign={'end'} mb={2} mr={2}>
+            <Button variant="ghost" mr={2} onClick={onClose}>
+              <Text fontSize={'14px'}>キャンセル</Text>
+            </Button>
+            <Button variant="solid" onClick={Name}>
+              <Text fontSize={'14px'}>決定</Text>
+            </Button>
+          </Box>
+        </ModalContent>
+      </Modal>
     </>
   )
 }
@@ -298,10 +294,6 @@ const NAV_ITEMS: Array<NavItem> = [
         label: 'コンテスト一覧',
         subLabel: '最新のコンテストを確認',
         href: '/app/contest',
-      },
-      {
-        label: 'コンテスト参加状況',
-        subLabel: 'コンテストに関するステータスを確認',
       },
     ],
   },

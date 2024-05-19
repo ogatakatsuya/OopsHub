@@ -39,7 +39,7 @@ const SubmitMordal = ({ isOpen, onClose, onOpen, contest_id }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ user: user_id, text: text, created_at: created_at }),
+            body: JSON.stringify({ user_id: user_id, text: text, created_at: created_at }),
             });
 
             if (!res.ok) {
