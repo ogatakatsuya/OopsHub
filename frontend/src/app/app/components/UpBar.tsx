@@ -56,7 +56,7 @@ export default function AppBar() {
         position="fixed"
         display={{ base: 'block' }}
         width="100%"
-        bg={useColorModeValue('gray.100', 'black')}
+        bg={useColorModeValue('gray.200', 'black')}
         px={5}
         zIndex={30}
         opacity={opacity}
