@@ -60,7 +60,6 @@ export default function CallToActionWithVideo() {
           <Flex flex={1} justify={'center'} align={'center'} position={'relative'} w={'full'}>
             <Box
               position={'relative'}
-              height={'320px'}
               rounded={'2xl'}
               boxShadow={'2xl'}
               width={'full'}
