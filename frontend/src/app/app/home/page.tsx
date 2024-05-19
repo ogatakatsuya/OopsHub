@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Button, Box } from "@chakra-ui/react";
-import PostButton from "../components/PostButton";
-import List from "../components/List";
+import React from 'react'
+import { Box } from '@chakra-ui/react'
+import PostButton from '../components/PostButton'
+import List from '../components/List'
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
       <List />
       <PostButton />
     </Box>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

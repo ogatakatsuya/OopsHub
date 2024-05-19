@@ -2,6 +2,8 @@
 
 import { Button, Text } from '@chakra-ui/react'
 import { useState } from 'react'
+import { BsLightbulb } from 'react-icons/bs'
+import { Tooltip } from '@chakra-ui/react'
 
 import { auth } from '../firebase'
 
@@ -45,15 +47,12 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
 
   return (
     <>
-      <span>{learnedNum}</span>
-      <Button mr={3} size="xs" onClick={toggleLike}>
-        ためになる
-      </Button>
-      {submitError && (
-        <Text color="red.500" mt={2}>
-          {submitError}
-        </Text>
-      )}
+      <Tooltip label="ためになる" fontSize="md">
+        <Button bgColor={'white'} mr={5} size="10px" onClick={toggleLike}>
+          <BsLightbulb />
+          <Text ml={1}>{learnedNum}</Text>
+        </Button>
+      </Tooltip>
     </>
   )
 }

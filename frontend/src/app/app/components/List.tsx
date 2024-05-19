@@ -30,42 +30,51 @@ export default function List() {
   }, [])
 
   return (
-    <Flex bgColor={'gray.200'}>
-      <Stack divider={<Divider borderColor="gray.900" />} spacing="4">
+    <Flex bgColor={'white'}>
+      <Stack divider={<Divider borderColor="gray.500" />} spacing={0}>
         {value.map((item, index) => (
-          <Box key={item['id']} mx={6}>
-            <Flex alignItems={'start'} mt={4} mb={4}>
-              <Avatar />
-              <Box ml={2}>
-                <Text bgColor={'gray.200'} rounded={'md'} px={2} py={1}>
-                  {item['text']}
-                </Text>
-              </Box>
-            </Flex>
-            <Flex alignItems={'start'}>
+          <Box key={item['id']} mx={6} mt={5}>
+            <Stack direction="row">
+              <Avatar boxSize={10} />
+              <Flex flex={1} direction="column" alignItems={'start'}>
+                <Stack direction={'row'} alignItems={'center'}>
+                  <Text fontSize={14} fontWeight={'bold'}>
+                    ユーザー名
+                  </Text>
+                  <Text fontSize={12}>{item['created_at']}</Text>
+                </Stack>
+                <Box>
+                  <Text fontSize={14} px={2} py={1}>
+                    {item['text']}
+                  </Text>
+                </Box>
+              </Flex>
+              <Box minW={10} />
+            </Stack>
+            <Stack direction="row" mt={2}>
+              <Box minW={10} />
               <Box mr={2}>
                 {item['solution'] ? (
-                  <Text bgColor={'gray.200'} rounded={'md'} px={2} py={1}>
+                  <Text fontSize={14} px={2} py={1}>
                     {item['solution']}
                   </Text>
                 ) : (
-                  <Text bgColor={'gray.200'} rounded={'md'} px={2} py={1}>
+                  <Text px={2} py={1}>
                     {item['text']}
                   </Text>
                 )}
               </Box>
-              <Avatar />
-            </Flex>
-            <Text fontSize="sm" my={4}>
-              {item['created_at']}
-            </Text>
-            {user && (
-              <>
-                <DonmaiButton post_id={item['id']} dontminds={item['dontminds']} />
-                <LikeButton post_id={item['id']} learneds={item['learneds']} />
-                <WaraButton post_id={item['id']} likes={item['likes']} />
-              </>
-            )}
+              <Avatar boxSize={10} mt={1} />
+            </Stack>
+            <Box textAlign={'end'} my={2}>
+              {user && (
+                <>
+                  <DonmaiButton post_id={item['id']} dontminds={item['dontminds']} />
+                  <LikeButton post_id={item['id']} learneds={item['learneds']} />
+                  <WaraButton post_id={item['id']} likes={item['likes']} />
+                </>
+              )}
+            </Box>
           </Box>
         ))}
       </Stack>
