@@ -26,7 +26,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  Input
+  Input,
 } from '@chakra-ui/react'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/app/firebase'
@@ -115,10 +115,10 @@ export default function AppBar() {
 
 const RenameButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [ submitErrot, setSubmitError ] = useState("");
-  const [ name, setName ] = useState("");
+  const [submitErrot, setSubmitError] = useState('')
+  const [name, setName] = useState('')
   const finalRef = React.useRef(null)
-  const user_id = auth.currentUser?.uid;
+  const user_id = auth.currentUser?.uid
   const Name = async () => {
     try {
       const res = await fetch('http://localhost:8000/name', {
@@ -127,7 +127,7 @@ const RenameButton = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id : user_id, user_name: name}),
+        body: JSON.stringify({ user_id: user_id, user_name: name }),
       })
 
       if (!res.ok) {
@@ -143,7 +143,6 @@ const RenameButton = () => {
       console.error('ネットワークエラー:', err)
     }
   }
-
 
   return (
     <>
