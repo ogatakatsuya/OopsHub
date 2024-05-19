@@ -1,6 +1,6 @@
 import React from 'react'
-import { Box, Button, Flex, Icon, useColorModeValue } from '@chakra-ui/react'
-import { BsFillHouseDoorFill, BsLightbulbFill, BsBellFill } from 'react-icons/bs'
+import { Box, Text, Button, Flex, Icon, useColorModeValue } from '@chakra-ui/react'
+import { BsFillHouseDoorFill, BsBarChartFill, BsBellFill } from 'react-icons/bs'
 import ContestButton from '../../components/ContestButton'
 import HomeButton from '../../components/HomeButton'
 
@@ -19,10 +19,20 @@ export default function BottomBar() {
       >
         <Flex h={14} justifyContent="space-between" alignItems="center">
           <HomeButton>
-            <Icon as={BsFillHouseDoorFill} boxSize={5} />
+            <Flex direction={'column'} alignItems={'center'}>
+              <Icon as={BsFillHouseDoorFill} boxSize={5} />
+              <Text mt={1} fontSize={11}>
+                ホーム
+              </Text>
+            </Flex>
           </HomeButton>
           <ContestButton>
-            <Icon as={BsLightbulbFill} boxSize={5} />
+            <Flex direction={'column'} alignItems={'center'}>
+              <Icon as={BsBarChartFill} boxSize={5} />
+              <Text mt={1} fontSize={11}>
+                コンテスト
+              </Text>
+            </Flex>
           </ContestButton>
           <Button
             flex={'1'}
@@ -34,7 +44,12 @@ export default function BottomBar() {
               borderRadius: '50%',
             }}
           >
-            <Icon as={BsBellFill} boxSize={5} />
+            <Flex direction={'column'} alignItems={'center'}>
+              <Icon as={BsBellFill} boxSize={5} />
+              <Text mt={1} fontSize={11}>
+                お知らせ
+              </Text>
+            </Flex>
           </Button>
         </Flex>
       </Box>

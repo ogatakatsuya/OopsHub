@@ -56,7 +56,7 @@ export default function AppBar() {
         position="fixed"
         display={{ base: 'block' }}
         width="100%"
-        bg={useColorModeValue('gray.200', 'black')}
+        bg={useColorModeValue('gray.100', 'black')}
         px={5}
         zIndex={30}
         opacity={opacity}
@@ -113,8 +113,8 @@ const AvatarMenu = () => {
         />
       </MenuButton>
       <MenuList>
-        <MenuItem>Profile</MenuItem>
-        <MenuItem onClick={handleLogout}>{auth ? 'Logout' : 'Logiing out...'}</MenuItem>
+        <MenuItem>プロフィール</MenuItem>
+        <MenuItem onClick={handleLogout}>{auth ? 'ログアウト' : 'ログアウト中...'}</MenuItem>
       </MenuList>
     </Menu>
   )
@@ -215,20 +215,20 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: 'Home',
+    label: 'ホーム',
     href: '/app/home',
   },
   {
-    label: 'Contest',
+    label: 'コンテスト',
     children: [
       {
-        label: 'View Contest',
-        subLabel: 'Join the latest contest',
+        label: 'コンテスト一覧',
+        subLabel: '最新のコンテストを確認',
         href: '/app/contest',
       },
       {
-        label: 'Contest Status',
-        subLabel: 'See your contest status',
+        label: 'コンテスト参加状況',
+        subLabel: 'コンテストに関するステータスを確認',
       },
     ],
   },
