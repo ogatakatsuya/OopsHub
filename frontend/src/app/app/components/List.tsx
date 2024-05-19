@@ -30,8 +30,8 @@ export default function List() {
   }, [])
 
   return (
-    <Flex bgColor={'gray.100'} justifyContent={'center'}>
-      <Flex maxW={'600px'} bgColor={'gray.50'}>
+    <Flex bgColor={'white'} justifyContent={'center'}>
+      <Flex maxW={'500px'} bgColor={'white'}>
         <Stack divider={<Divider borderColor="gray.500" />} spacing={0}>
           {value.map((item, index) => (
             <Box key={item['id']} mx={6} mt={5}>
