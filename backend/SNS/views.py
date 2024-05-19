@@ -32,6 +32,11 @@ def signup(request):
     if request.method=="PUT":
         data=request.data.copy()
         user_id = data["user_id"]
+        user, created = User.objects.get_or_create(id=user_id, defaults={
+        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
+        'password': 'defaultpassword',  # デフォルトのパスワード
+        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
+    })          
         try:
             user = User.objects.get(id=user_id)  # 対象のユーザーを取得
         except User.DoesNotExist:
@@ -334,6 +339,12 @@ def contestroom(request,contest_id):
         data["message"]=data.pop('text', None)
         data["user"]=data.get("user_id")
         data["created_at"]=data.get("created_at")
+        user_id = data.get("user_id")
+        user, created = User.objects.get_or_create(id=user_id, defaults={
+        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
+        'password': 'defaultpassword',  # デフォルトのパスワード
+        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
+    })            
         serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
