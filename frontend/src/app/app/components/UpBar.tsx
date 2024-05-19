@@ -56,7 +56,7 @@ export default function AppBar() {
         position="fixed"
         display={{ base: 'block' }}
         width="100%"
-        bg={useColorModeValue('gray.100', 'black')}
+        bg={useColorModeValue('gray.200', 'black')}
         px={5}
         zIndex={30}
         opacity={opacity}
@@ -66,7 +66,7 @@ export default function AppBar() {
           <Flex h={14} alignItems={'center'} justifyContent={'space-between'}>
             <AvatarMenu />
             <Text fontSize="xl" fontWeight="bold" ml={4}>
-              UppsHub
+              OopsHub
             </Text>
             <SettingsIcon boxSize={5} />
           </Flex>
@@ -75,7 +75,7 @@ export default function AppBar() {
           <Flex h={14} alignItems={'center'} justifyContent={'space-between'}>
             <Flex>
               <Text textAlign={'left'} fontWeight="bold">
-                UppsHub
+                OopsHub
               </Text>
               <Flex display={{ base: 'none', sm: 'flex' }} ml={10}>
                 <DesktopNav />
@@ -224,7 +224,7 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: 'View Contest',
         subLabel: 'Join the latest contest',
-        href: '/app/home',
+        href: '/app/contest',
       },
       {
         label: 'Contest Status',
