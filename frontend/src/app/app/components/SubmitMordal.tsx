@@ -31,7 +31,13 @@ type Inputs = {
   text: string
 }
 
-export default function SubmitMordal({ isOpen, onOpen, onClose }) {
+interface SubmitModalProps {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+}
+
+export default function SubmitMordal({ isOpen, onOpen, onClose }: SubmitModalProps) {
   const [solution, setSolution] = useState('')
   const [text, setText] = useState('')
   const { user } = useAuthContext()
