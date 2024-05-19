@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, Text, Flex, Card, CardHeader, Stack, StackDivider, CardBody, Heading, Button, Avatar } from "@chakra-ui/react";
+import { Box, Text, Flex, Card, CardHeader, Stack, StackDivider, CardBody, Heading, Button } from "@chakra-ui/react";
 import { useState, useEffect } from "react"
 import { useDisclosure } from "@chakra-ui/react";
-import SubmitMordal from "../components/SubmitMordal";
-import VoteButton from "../components/VoteButton";
-import PostButton from "../components/PostButton";
+import SubmitMordal from "../../components/SubmitMordal";
+import VoteButton from "../../components/VoteButton";
+import PostButton from "../../components/PostButton";
 
 
 
@@ -52,8 +52,7 @@ const Contest = ({ params }: ContestProps) => {
     };
     return (
         <>
-        <Flex justifyContent="center" mt={4}>
-        <Card width={['80%', '70%', '60%', '50%']}>
+        <Card>
         <CardHeader
         display="flex"
         flexDirection="column"
@@ -64,33 +63,26 @@ const Contest = ({ params }: ContestProps) => {
         <Text>開始 : {created_at}</Text>
         <Text>締切 : {formatDate(deadline)}</Text>
         </CardHeader>
+
         <CardBody>
+            <Stack divider={<StackDivider />} spacing='4'>
             {value.map((item, index) => (
-            <Box key={item["id"]} mx="auto" mt={5} width={['100%', '90%', '80%', '70%']} justifyContent="center">
-                <Stack direction="row">
-                <Avatar boxSize={10} />
-                <Flex flex={1} direction="column" alignItems={'start'}>
-                    <Stack direction={'row'} alignItems={'center'}>
-                    <Text fontSize={14} fontWeight={'bold'}>
-                        ユーザー名
-                    </Text>
-                    <Text fontSize={12}>{item['created_at']}</Text>
-                    </Stack>
-                    <Box>
-                    <Text fontSize={14} px={2} py={1}>
-                        {item['message']}
-                    </Text>
+                <Box key={item["id"]}>
+                    <Flex alignItems={'start'} mb={4}>
+                    <Box ml={2}>
+                        <Text rounded={'md'} px={2} py={1}>
+                        {item["message"]}
+                        </Text>
+                        <Text fontSize="sm" my={4}>
+                        {item["created_at"]}
+                        </Text>
                     </Box>
-                </Flex>
-                </Stack>
-                <Flex justifyContent="flex-end" mt={2}>
-                <VoteButton votes={item["votes"]} post_id={item["id"]}/>
-                </Flex>
-            </Box>
+                    </Flex>
+                </Box>
             ))}
+            </Stack>
         </CardBody>
         </Card>
-        </Flex>
 
         <PostButton contest_id={params.id} />
         <SubmitMordal isOpen={isOpen} onClose={onClose} onOpen={onOpen} contest_id={params.id} setValue={setValue}/>

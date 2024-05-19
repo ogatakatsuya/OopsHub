@@ -2,6 +2,8 @@
 
 import { Button, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import { MdHowToVote } from "react-icons/md";
+import { Tooltip } from "@chakra-ui/react";
 
 import { auth } from "@/app/firebase";
 
@@ -41,14 +43,11 @@ const VoteButton: React.FC<LikeButtonProps> = ({ votes, post_id }) => {
     }
     return (
         <>
-        <span>{voteNum}</span>
-        <Button 
-        mr={3} 
-        size='xs'
-        onClick={vote}
-        >
-        投票
-        </Button>
+        <Tooltip label="投票する" fontSize="md">
+            <Button bgColor={'white'} mr={5} size="10px" onClick={vote}>
+            <MdHowToVote />
+            </Button>
+        </Tooltip>
         {submitError && (
         <Text color="red.500" mt={2}>
             {submitError}
