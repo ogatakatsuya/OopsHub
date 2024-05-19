@@ -19,6 +19,7 @@ class PostSerializer(serializers.ModelSerializer):
     dont_minds = serializers.SerializerMethodField()
     learneds = serializers.SerializerMethodField()
     solution = serializers.SerializerMethodField(default=None)
+    
     class Meta:
         model = Post
         fields = ["id","content","created_at","user","likes","dont_minds","learneds","solution"]
@@ -53,8 +54,10 @@ class PostSerializer(serializers.ModelSerializer):
         return None
 
 class PostListSerializer(PostSerializer):
+    user_name = serializers.CharField(source='user.name')
     class Meta(PostSerializer.Meta):
-        fields = ["id", "content", "created_at", "likes", "dont_minds","learneds","solution"] 
+        # fields = ["id", "content", "created_at", "likes", "dont_minds","learneds","solution"] 
+        fields = ["id","content","created_at","user","user_name","likes","dont_minds","learneds","solution"]
 
 
 
@@ -93,14 +96,16 @@ class ContestSerializer(serializers.ModelSerializer):
 
 class Contest_PostSerializer(serializers.ModelSerializer):
     votes = serializers.SerializerMethodField()
+    user_name = serializers.CharField(source='user.name', read_only=True)
     class Meta:
         model=Contest_Post
-        fields=["contest_id","user","id","message","created_at","votes"]
+        fields=["contest_id","user","user_name","id","message","created_at","votes"]
     def get_votes(self, obj):
         return obj.votes.count()
 
 class LikeSerializer(serializers.ModelSerializer):
     user = serializers.CharField()
+    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
     class Meta:
         model = Like

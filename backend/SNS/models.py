@@ -2,16 +2,18 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    name=models.CharField(max_length=100)
+    id = models.CharField(max_length=100, primary_key=True)
+    name=models.CharField(max_length=100, default='匿名ユーザー')
     password=models.CharField(max_length=100)
-    created_at=models.DateTimeField()
-    updated_at=models.DateTimeField(null=True)
+    created_at=models.CharField(max_length=50)
+    updated_at=models.CharField(max_length=50,null=True, blank=True)
     def __str__(self):
         return self.name
 
 class Post(models.Model):
     content=models.CharField(max_length=100)
-    user=models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user=models.CharField(max_length=100)
     created_at=models.CharField(max_length=100)
     def __str__(self):
         return self.content
@@ -25,7 +27,8 @@ class Contest(models.Model):
 
 class Contest_Post(models.Model):
     contest_id=models.CharField(max_length=50)
-    user=models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user=models.CharField(max_length=100)
     message=models.CharField(max_length=100)
     created_at=models.CharField(max_length=100)
     def __str__(self):
@@ -39,7 +42,8 @@ class AISolution(models.Model):
         return self.content
 
 class Button(models.Model):
-    user = models.CharField(max_length=50)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user=models.CharField(max_length=100)
     class Meta:
         abstract = True
         unique_together = ('user', 'post')

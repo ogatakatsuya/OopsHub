@@ -301,14 +301,15 @@ def contestroom(request,contest_id):
     if request.method=="POST":
         data=request.data.copy()
         data["contest_id"]=contest_id
-        data["message"]=data.get("text")
-        data["user_id"]=data.get("user_id")
-        data["created_at"]=data.get("created_at")
+        data["message"]=data.pop('text', None)
+        data["user"]=data.get("user_id")
+        # data["created_at"]=data.get("created_at")
         serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             data=serializer.data
-            return JsonResponse({"message":data["created_at"]})
+            return Response({"message":data["created_at"]})
+        return JsonResponse({"error":"contest is not valid","data":data,"errors": serializer.errors})
 
 
 class PostDeleteView(generics.GenericAPIView):    
