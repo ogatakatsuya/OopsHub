@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned,Vote, AISolution
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer,UserSerializer
 import os
 from dotenv import load_dotenv
 from litellm import completion
@@ -22,6 +22,19 @@ def hello(request: WSGIRequest) -> JsonResponse:
 
 
 ### CRUD機能 ###
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["PUT","DELETE","GET","POST"])
+def signup(request):
+    """ユーザー登録"""
+    if request.method=="GET":
+        return Response({"message": "View success"})
+    if request.method=="POST":
+        data=request.data.copy()
+        serializer=UserSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"success"})
+        return Response({"message":"fail"})
 
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
