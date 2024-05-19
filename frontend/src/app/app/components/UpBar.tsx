@@ -26,7 +26,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-  Input
+  Input,
 } from '@chakra-ui/react'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/app/firebase'
@@ -115,10 +115,10 @@ export default function AppBar() {
 
 const RenameButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [ submitErrot, setSubmitError ] = useState("");
-  const [ name, setName ] = useState("");
+  const [submitErrot, setSubmitError] = useState('')
+  const [name, setName] = useState('')
   const finalRef = React.useRef(null)
-  const user_id = auth.currentUser?.uid;
+  const user_id = auth.currentUser?.uid
   const Name = async () => {
     try {
       const res = await fetch('http://localhost:8000/user', {
@@ -127,14 +127,14 @@ const RenameButton = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id : user_id, user_name: name}),
+        body: JSON.stringify({ user_id: user_id, user_name: name }),
       })
 
       if (!res.ok) {
         const errorData = await res.json()
         setSubmitError(errorData.message || '何か問題が発生しました')
       } else {
-        const data = await res.json();
+        const data = await res.json()
       }
     } catch (err) {
       setSubmitError('ネットワークエラーです。後で再試行してください。')
@@ -142,31 +142,35 @@ const RenameButton = () => {
     }
   }
 
-
   return (
     <>
       <Box textAlign={'left'} onClick={onOpen} width={'100%'}>
         名前を変更
-      </Button>
-      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>名前を変更</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <p>{name}</p>
-            <Input value={name} onChange={(e) => {setName(e.target.value)}}/>
-          </ModalBody>
-          <Box textAlign={'end'} mb={2} mr={2}>
-            <Button variant="ghost" mr={2} onClick={onClose}>
-              <Text fontSize={'14px'}>キャンセル</Text>
-            </Button>
-            <Button variant="solid" onClick={Name}>
-              <Text fontSize={'14px'}>決定</Text>
-            </Button>
-          </Box>
-        </ModalContent>
-      </Modal>
+        <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>名前を変更</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <p>{name}</p>
+              <Input
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value)
+                }}
+              />
+            </ModalBody>
+            <Box textAlign={'end'} mb={2} mr={2}>
+              <Button variant="ghost" mr={2} onClick={onClose}>
+                <Text fontSize={'14px'}>キャンセル</Text>
+              </Button>
+              <Button variant="solid" onClick={Name}>
+                <Text fontSize={'14px'}>決定</Text>
+              </Button>
+            </Box>
+          </ModalContent>
+        </Modal>
+      </Box>
     </>
   )
 }
