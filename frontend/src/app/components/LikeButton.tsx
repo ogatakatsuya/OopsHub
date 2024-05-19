@@ -50,7 +50,9 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
       <Tooltip label="ためになる" fontSize="md">
         <Button bgColor={'white'} mr={5} size="10px" onClick={toggleLike}>
           <BsLightbulb />
-          <Text ml={1}>{learnedNum}</Text>
+          <Text ml={1} fontSize={12}>
+            {learnedNum}
+          </Text>
         </Button>
       </Tooltip>
     </>

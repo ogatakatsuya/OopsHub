@@ -46,7 +46,9 @@ const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id, dontminds }) => {
       <Tooltip label="どんまい" fontSize="md">
         <Button bgColor={'white'} mr={5} size="10px" onClick={like}>
           <BsHeart />
-          <Text ml={1}>{dontmindsNum}</Text>
+          <Text fontSize={12} ml={1}>
+            {dontmindsNum}
+          </Text>
         </Button>
       </Tooltip>
     </>
