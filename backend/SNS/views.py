@@ -16,6 +16,7 @@ import os
 from dotenv import load_dotenv
 from litellm import completion
 import time
+from django.utils import timezone
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
@@ -61,10 +62,17 @@ def App(request):
     if request.method=="POST":
         data = request.data.copy()  # リクエストデータのコピーを作成
         # カラム名を変更
+        user_id = data['user_id']
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
         data['content'] = data.pop('text', None)
         solution_content = data['solution']
+        user, created = User.objects.get_or_create(id=user_id, defaults={
+        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
+        'password': 'defaultpassword',  # デフォルトのパスワード
+        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
+    })                               
+        data['user'] = user.id
         serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
         if serializer_post.is_valid():  # データの検証
             post = serializer_post.save()  # データの保存
