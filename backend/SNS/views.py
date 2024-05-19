@@ -295,14 +295,8 @@ def contestroom(request,contest_id):
     contest_posts=Contest_Post.objects.filter(contest_id=contest_id).all().order_by("-id")#古い順に並べてある
     if request.method=="GET":
         serializer=Contest_PostSerializer(contest_posts,many=True)
-        votes=[getattr(post, "votes").count() for post in contest_posts]
         contest_posts=serializer.data
-        title=contest.name
-        posts=[]
-        for contest in contest_posts:
-            contest["title"]=title
-            posts.append(contest)
-        return JsonResponse({"message":posts})
+        return JsonResponse({"message":contest_posts,"title":contest.name,"created_at":contest.created_at,"deadline":contest.deadline})
     
     if request.method=="POST":
         data=request.data.copy()
