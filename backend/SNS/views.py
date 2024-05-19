@@ -296,8 +296,7 @@ def contestroom(request,contest_id):
     if request.method=="GET":
         serializer=Contest_PostSerializer(contest_posts,many=True)
         contest_posts=serializer.data
-        title=contest.name
-        return JsonResponse({"message":contest_posts,"title":title})
+        return JsonResponse({"message":contest_posts,"title":contest.name,"created_at":contest.created_at,"deadline":contest.deadline})
     
     if request.method=="POST":
         data=request.data.copy()
