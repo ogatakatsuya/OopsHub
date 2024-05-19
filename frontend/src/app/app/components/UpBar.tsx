@@ -4,6 +4,7 @@ import React from 'react'
 import {
   Box,
   Flex,
+  Avatar,
   Button,
   Menu,
   MenuButton,
