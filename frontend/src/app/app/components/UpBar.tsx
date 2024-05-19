@@ -102,9 +102,7 @@ export default function AppBar() {
             </Flex>
             <Flex>
               <Button onClick={handleLogout}>
-                <Text fontSize={'14px'} textColor={''}>
-                  {auth ? 'ログアウト' : 'ログアウト中...'}
-                </Text>
+                <Text fontSize={'14px'}>{auth ? 'ログアウト' : 'ログアウト中...'}</Text>
               </Button>
               <SettingMenu />
             </Flex>
@@ -123,9 +121,9 @@ const RenameButton = () => {
   const user_id = auth.currentUser?.uid
   const Name = async () => {
     try {
-      const res = await fetch('http://localhost:8000/name', {
+      const res = await fetch('http://localhost:8000/user', {
         // ポート番号を修正
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -136,9 +134,7 @@ const RenameButton = () => {
         const errorData = await res.json()
         setSubmitError(errorData.message || '何か問題が発生しました')
       } else {
-        const data = await res.json();
-        onClose();
-        setName("");
+        const data = await res.json()
       }
     } catch (err) {
       setSubmitError('ネットワークエラーです。後で再試行してください。')
@@ -148,7 +144,7 @@ const RenameButton = () => {
 
   return (
     <>
-      <Button textAlign={'center'} onClick={onOpen}>
+      <Button textAlign={'center'} onClick={onOpen} width={'100%'}>
         名前を変更
       </Button>
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
@@ -157,7 +153,13 @@ const RenameButton = () => {
           <ModalHeader>名前を変更</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input value={name} onChange={(e) => {setName(e.target.value)}}/>
+            <p>{name}</p>
+            <Input
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value)
+              }}
+            />
           </ModalBody>
           <Box textAlign={'end'} mb={2} mr={2}>
             <Button variant="ghost" mr={2} onClick={onClose}>
@@ -296,6 +298,10 @@ const NAV_ITEMS: Array<NavItem> = [
         label: 'コンテスト一覧',
         subLabel: '最新のコンテストを確認',
         href: '/app/contest',
+      },
+      {
+        label: 'コンテスト参加状況',
+        subLabel: 'コンテストに関するステータスを確認',
       },
     ],
   },
