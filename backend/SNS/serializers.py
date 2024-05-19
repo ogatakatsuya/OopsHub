@@ -10,7 +10,7 @@ class AISolutionSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields=["id","name","passowrd","created_at","updated_at"]
+        fields=["id","name","created_at","updated_at"]
 
 class PostSerializer(serializers.ModelSerializer):
     content=serializers.CharField()
