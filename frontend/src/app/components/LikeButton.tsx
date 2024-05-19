@@ -2,12 +2,9 @@
 
 import { Button, Text } from '@chakra-ui/react'
 import { useState } from 'react'
-<<<<<<< HEAD
 import { BsLightbulb } from 'react-icons/bs'
 import { Tooltip } from '@chakra-ui/react'
 
-=======
->>>>>>> e9b1cf6ef6119aa72e0a331e25efaa789498f8d6
 import { auth } from '../firebase'
 
 interface LikeButtonProps {
@@ -61,4 +58,3 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, learneds }) => {
 }
 
 export default LikeButton
-

@@ -40,7 +40,6 @@ const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id, dontminds }) => {
       setSubmitError('ネットワークエラーです。後で再試行してください。')
       console.error('ネットワークエラー:', err)
     }
-<<<<<<< HEAD
   }
   return (
     <>
@@ -52,14 +51,6 @@ const DonmaiButton: React.FC<LikeButtonProps> = ({ post_id, dontminds }) => {
       </Tooltip>
     </>
   )
-=======
-    return (
-        <>
-        <span>{dontmindsNum}</span>
-        <Button mr={3} size='xs' onClick={like}>どんまい</Button>
-        </>
-    )
->>>>>>> e9b1cf6ef6119aa72e0a331e25efaa789498f8d6
 }
 
 export default DonmaiButton
