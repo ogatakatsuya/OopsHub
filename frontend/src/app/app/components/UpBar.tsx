@@ -77,7 +77,7 @@ export default function AppBar() {
         display={{ base: 'block' }}
         width="100%"
         bg={useColorModeValue('gray.100', 'black')}
-        px={5}
+        pl={5}
         zIndex={30}
         opacity={opacity}
         transition="opacity 0.3s"
@@ -100,8 +100,12 @@ export default function AppBar() {
                 <DesktopNav />
               </Flex>
             </Flex>
-            <Button onClick={handleLogout}>{auth ? 'ログアウト' : 'ログアウト中...'}</Button>
-            <SettingMenu />
+            <Flex>
+              <Button onClick={handleLogout}>
+                <Text fontSize={'14px'}>{auth ? 'ログアウト' : 'ログアウト中...'}</Text>
+              </Button>
+              <SettingMenu />
+            </Flex>
           </Flex>
         </Box>
       </Box>
@@ -141,7 +145,7 @@ const RenameButton = () => {
 
   return (
     <>
-      <Button textAlign={'center'} onClick={onOpen}>
+      <Box textAlign={'left'} onClick={onOpen} width={'100%'}>
         名前を変更
       </Button>
       <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
@@ -170,7 +174,7 @@ const RenameButton = () => {
 const SettingMenu = () => {
   return (
     <Menu>
-      <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
+      <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={'60px'}>
         <SettingsIcon boxSize={5} />
         <Text mt={1} fontSize={11}>
           設定
