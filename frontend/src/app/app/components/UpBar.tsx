@@ -18,6 +18,14 @@ import {
   PopoverContent,
   Icon,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { signOut } from 'firebase/auth'
 import { auth } from '../../firebase'
@@ -29,6 +37,7 @@ import { useEffect, useState } from 'react'
 export default function AppBar() {
   const [opacity, setOpacity] = useState(1)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const router = useRouter()
 
   const handleScroll = () => {
     const scrollY = window.scrollY
@@ -50,6 +59,16 @@ export default function AppBar() {
     }
   }, [lastScrollY])
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      router.push('/')
+      console.log('sign out success!')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <Box
@@ -62,13 +81,12 @@ export default function AppBar() {
         opacity={opacity}
         transition="opacity 0.3s"
       >
-        <Box display={{ base: 'block', sm: 'none' }}>
-          <Flex h={14} alignItems={'center'} justifyContent={'space-between'}>
-            <AvatarMenu />
-            <Text fontSize="xl" fontWeight="bold" ml={4}>
+        <Box display={{ base: 'block', sm: 'none' }} width="100%">
+          <Flex h={14} alignItems={'center'} justifyContent="space-between">
+            <Text flex={1} fontSize="xl" fontWeight="bold" ml={4} textAlign="center">
               OopsHub
             </Text>
-            <SettingsIcon boxSize={5} />
+            <SettingMenu />
           </Flex>
         </Box>
         <Box display={{ base: 'none', sm: 'block' }}>
@@ -81,7 +99,8 @@ export default function AppBar() {
                 <DesktopNav />
               </Flex>
             </Flex>
-            <AvatarMenu />
+            <Button onClick={handleLogout}>{auth ? 'ログアウト' : 'ログアウト中...'}</Button>
+            <SettingMenu />
           </Flex>
         </Box>
       </Box>
@@ -89,32 +108,50 @@ export default function AppBar() {
   )
 }
 
-const AvatarMenu = () => {
-  const router = useRouter()
+const RenameButton = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const finalRef = React.useRef(null)
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth)
-      router.push('/')
-      console.log('sign out success!')
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  return (
+    <>
+      <Button textAlign={'center'} onClick={onOpen}>
+        名前を変更
+      </Button>
+      <Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>名前を変更</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>Some contents...</p>
+          </ModalBody>
+          <Box textAlign={'end'} mb={2} mr={2}>
+            <Button variant="ghost" mr={2} onClick={onClose}>
+              <Text fontSize={'14px'}>キャンセル</Text>
+            </Button>
+            <Button variant="solid">
+              <Text fontSize={'14px'}>決定</Text>
+            </Button>
+          </Box>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
 
+const SettingMenu = () => {
   return (
     <Menu>
       <MenuButton as={Button} rounded={'full'} variant={'link'} cursor={'pointer'} minW={0}>
-        <Avatar
-          size={'sm'}
-          src={
-            'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-          }
-        />
+        <SettingsIcon boxSize={5} />
+        <Text mt={1} fontSize={11}>
+          設定
+        </Text>
       </MenuButton>
       <MenuList>
-        <MenuItem>プロフィール</MenuItem>
-        <MenuItem onClick={handleLogout}>{auth ? 'ログアウト' : 'ログアウト中...'}</MenuItem>
+        <MenuItem>
+          <RenameButton />
+        </MenuItem>
       </MenuList>
     </Menu>
   )
@@ -133,7 +170,7 @@ const DesktopNav = () => {
             <PopoverTrigger>
               <Link
                 p={2}
-                href={navItem.href ?? '#'}
+                href={navItem.href}
                 fontSize={'sm'}
                 fontWeight={500}
                 color={linkColor}
@@ -231,8 +268,5 @@ const NAV_ITEMS: Array<NavItem> = [
         subLabel: 'コンテストに関するステータスを確認',
       },
     ],
-  },
-  {
-    label: 'Help',
   },
 ]
