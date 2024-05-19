@@ -30,6 +30,14 @@ const Contest = () => {
     useEffect(() => {
         console.log(contest); // contestが更新された後にログに出力
     }, [contest]);
+
+    const formatDate = (isoString) => {
+        const date = new Date(isoString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    };
     return (
         <>
         <Flex justify="center" alignItems="center" my={6}>
@@ -57,8 +65,8 @@ const Contest = () => {
                         <Heading size='lg'>{item["name"]}</Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text size="md">開始 : 2024/03/10</Text>
-                        <Text>締切 : 2024/05/30</Text>
+                        <Text size="md">開始 : {item["created_at"]}</Text>
+                        <Text>締切 : {formatDate(item["deadline"])}</Text>
                     </CardBody>
                     <CardFooter>
                         <Flex justifyContent="flex-end" width="100%">
@@ -94,12 +102,12 @@ const Contest = () => {
                         <Heading size='lg'>{item["name"]}</Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text size="md">開始 : 2024/03/10</Text>
-                        <Text>締切 : 2024/05/30</Text>
+                        <Text size="md">開始 : {item["created_at"]}</Text>
+                        <Text>締切 : {formatDate(item["deadline"])}</Text>
                     </CardBody>
                     <CardFooter>
                         <Flex justifyContent="flex-end" width="100%">
-                            <Button as="a" href={`/app/contest/${item["contest_id"]}`}>結果を見る</Button>
+                            <Button as="a" href={`/app/contest/result/${item["contest_id"]}`}>結果を見る</Button>
                         </Flex>
                     </CardFooter>
                 </Card>
