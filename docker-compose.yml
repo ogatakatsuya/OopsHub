@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: backend
+    build:
+      dockerfile: ./backend/Dockerfile
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - type: bind
+        source: ./backend
+        target: /app
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DEBUG=1
+
+  frontend:
+    container_name: vol5-front
+    build:
+      dockerfile: ./frontend/Dockerfile
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /app
+      - type: volume
+        source: node_modules
+        target: /app/node_modules
+    command: npm run dev
+
+volumes:
+  node_modules:
