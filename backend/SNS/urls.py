@@ -10,6 +10,7 @@ urlpatterns = [
     path("contest/",views.contest,name="contest"),
     path("contest/<int:contest_id>",ContestDeleteView.as_view(),name="contest-delete"),
     path("contest/<int:contest_id>/post",views.contestroom,name="contestroom"),
+    path("name",views.signup,name="signup"),
     path("contest/<int:contest_id>/post/<int:post_id>",views.PostDeleteView.as_view(),name="delete-post"),
     path("contest/<int:post_id>/vote",VoteCreateDestroyView.as_view(),name="vote-create"),
     path('like/<int:post_id>/',  LikeCreateDestroyView.as_view(), name='like-create-destroy'),

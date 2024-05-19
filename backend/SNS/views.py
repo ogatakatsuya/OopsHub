@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Post, Like, DontMind, Learned,Vote, AISolution
-from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer
+from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer, UserSerializer
 import os
 from dotenv import load_dotenv
 from litellm import completion
@@ -22,7 +22,29 @@ def hello(request: WSGIRequest) -> JsonResponse:
 
 
 ### CRUD機能 ###
-
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["PUT","DELETE","GET","POST"])
+def signup(request):
+    """ユーザー登録"""
+    if request.method=="GET":
+        return Response({"message": "View success"})
+    if request.method=="PUT":
+        data=request.data.copy()
+        user_id = data["user_id"]
+        try:
+            user = User.objects.get(id=user_id)  # 対象のユーザーを取得
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        data["id"] = data.pop('user_id', None)
+        data["name"] = data.pop('user_name', None)
+        serializer = UserSerializer(user, data=data)  # 対象のユーザーインスタンスとデータをシリアライザに渡す
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "success"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "fail", "error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
 def App(request):
