@@ -4,6 +4,7 @@ import { useAuthContext } from '@/app/auth_provider/AuthProvider'
 import LikeButton from '@/app/components/LikeButton'
 import DonmaiButton from '@/app/components/DonmaiButton'
 import WaraButton from '@/app/components/WaraButton'
+import Image from 'next/image'
 
 export default function List() {
   const [value, setValue] = useState([])
@@ -65,7 +66,7 @@ export default function List() {
                     </Text>
                   )}
                 </Box>
-                <Avatar boxSize={10} mt={1} />
+                <Avatar boxSize={'50px'} mt={1} src={'/ken.svg'}></Avatar>
               </Stack>
               <Box textAlign={'end'} mb={2} mt={1}>
                 {user && (

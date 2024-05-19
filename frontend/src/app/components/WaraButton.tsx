@@ -48,7 +48,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ post_id, likes }) => {
   return (
     <>
       <Tooltip label="笑った" fontSize="md">
-        <Button bgColor={'white'} mr={5} size="10px" onClick={toggleLike}>
+        <Button bgColor={'gray.50'} mr={5} size="10px" onClick={toggleLike}>
           <BsEmojiGrin />{' '}
           <Text ml={1} fontSize={12}>
             {likeNum}
