@@ -64,10 +64,9 @@ const Contest = ({ params }: ContestProps) => {
         <Text>開始 : {created_at}</Text>
         <Text>締切 : {formatDate(deadline)}</Text>
         </CardHeader>
-
         <CardBody>
             {value.map((item, index) => (
-            <Box key={item["id"]} mx={6} mt={5} width={['100%', '90%', '80%', '70%']}>
+            <Box key={item["id"]} mx="auto" mt={5} width={['100%', '90%', '80%', '70%']} justifyContent="center">
                 <Stack direction="row">
                 <Avatar boxSize={10} />
                 <Flex flex={1} direction="column" alignItems={'start'}>
