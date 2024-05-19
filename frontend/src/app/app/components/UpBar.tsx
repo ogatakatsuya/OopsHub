@@ -102,7 +102,9 @@ export default function AppBar() {
             </Flex>
             <Flex>
               <Button onClick={handleLogout}>
-                <Text fontSize={'14px'}>{auth ? 'ログアウト' : 'ログアウト中...'}</Text>
+                <Text fontSize={'14px'} textColor={''}>
+                  {auth ? 'ログアウト' : 'ログアウト中...'}
+                </Text>
               </Button>
               <SettingMenu />
             </Flex>
