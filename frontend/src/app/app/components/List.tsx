@@ -40,7 +40,7 @@ export default function List() {
                 <Flex flex={1} direction="column" alignItems={'start'}>
                   <Stack direction={'row'} alignItems={'center'}>
                     <Text fontSize={14} fontWeight={'bold'}>
-                      ユーザー名
+                      {item["user_name"]}
                     </Text>
                     <Text fontSize={12}>{item['created_at']}</Text>
                   </Stack>
