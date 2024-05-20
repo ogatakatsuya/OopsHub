@@ -1,5 +1,5 @@
 # OopsHub
-<img width="721" alt="Screenshot 2024-05-19 at 15 13 03" src="https://github.com/ogatakatsuya/OopsHub/assets/130939004/3adf7546-dcc5-40ec-8728-5c87463935cb">
+<img width="1440" alt="Screenshot 2024-05-20 at 11 36 34" src="https://github.com/ogatakatsuya/OopsHub/assets/130939004/2b9e2579-86a6-40ec-8777-2660bad84f73">
 <img width="541" alt="Screenshot 2024-05-19 at 15 19 58" src="https://github.com/ogatakatsuya/OopsHub/assets/130939004/62c605f7-e396-4f83-a4d7-5891c8eee10b">
 
 # 要件定義等
