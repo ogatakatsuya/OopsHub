@@ -23,13 +23,10 @@ def hello(request: WSGIRequest) -> JsonResponse:
 
 
 ### CRUD機能 ###
-@csrf_exempt # テスト用、実際は外す必要あり
-@api_view(["PUT","DELETE","GET","POST"])
-def signup(request):
-    """ユーザー登録"""
-    if request.method=="GET":
+class SignUpView(generics .GenericAPIView):
+    def get(self, request, *args, **kwargs):
         return Response({"message": "View success"})
-    if request.method=="PUT":
+    def post(self, request, *args, **kwargs):
         data=request.data.copy()
         user_id = data["user_id"]
         user, created = User.objects.get_or_create(id=user_id, defaults={
