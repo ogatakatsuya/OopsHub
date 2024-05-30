@@ -21,8 +21,6 @@ from django.utils import timezone
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
 
-
-### CRUD機能 ###
 class SignUpView(generics .GenericAPIView):
     def get(self, request, *args, **kwargs):
         return Response({"message": "View success"})
