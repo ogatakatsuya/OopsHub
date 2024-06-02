@@ -2,52 +2,51 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from rest_framework import generics
 from SNS.models import User, Post, Like,Contest,Contest_Post
-import json
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Post, Like, DontMind, Learned,Vote, AISolution
+from .models import Post, Like, DontMind, Learned,Vote
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer, UserSerializer
-import os
-from dotenv import load_dotenv
 from litellm import completion
-import time
 from django.utils import timezone
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
 
+###ユーザー登録###
+class SignUpView(generics.GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-### CRUD機能 ###
-@csrf_exempt # テスト用、実際は外す必要あり
-@api_view(["PUT","DELETE","GET","POST"])
-def signup(request):
-    """ユーザー登録"""
-    if request.method=="GET":
+    def get(self, request, *args, **kwargs):
+        """GETメソッドでユーザー登録のビューを表示"""
         return Response({"message": "View success"})
-    if request.method=="PUT":
-        data=request.data.copy()
-        user_id = data["user_id"]
+
+    def put(self, request, *args, **kwargs):
+        """PUTメソッドでユーザー情報の更新を行う"""
+        data = request.data.copy()
+        user_id = data.get("user_id")
+
+        # Userオブジェクトの取得、またはデフォルト値で新規作成
         user, created = User.objects.get_or_create(id=user_id, defaults={
-        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
-        'password': 'defaultpassword',  # デフォルトのパスワード
-        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
-    })          
-        try:
-            user = User.objects.get(id=user_id)  # 対象のユーザーを取得
-        except User.DoesNotExist:
-            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+            'name': '匿名ユーザー',
+            'password': 'defaultpassword',
+            'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')
+        })
+
+        # データ変更
         data["id"] = data.pop('user_id', None)
         data["name"] = data.pop('user_name', None)
-        serializer = UserSerializer(user, data=data)  # 対象のユーザーインスタンスとデータをシリアライザに渡す
+
+        # シリアライザーを使用してユーザー情報を更新
+        serializer = self.get_serializer(user, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "success"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": "fail", "error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+### CRUD機能 ### 
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
 def App(request):
