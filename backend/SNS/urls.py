@@ -6,7 +6,7 @@ urlpatterns = [
     path('', views.hello),
     path('post/',views.PostView.as_view(),name="Post_get_post"),
     path("post/<int:pk>",views.PostModificationView.as_view(),name="post_modify"),
-    path("contest/",views.contest,name="contest"),
+    path("contest/",views.ContestAPIView.as_view(),name="contest"),
     path("contest/<int:contest_id>",views.ContestDeleteView.as_view(),name="contest-delete"),
     path("contest/<int:contest_id>/post",views.contestroom,name="contestroom"),
     path("name",views.SignUpView.as_view(),name="signup"),

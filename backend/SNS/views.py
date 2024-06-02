@@ -88,7 +88,7 @@ class PostModificationView(generics .GenericAPIView):
     """
     API view to handle updating and deleting posts.
     """
-    
+
     def put(self, request, pk):
         try:
             post = Post.objects.get(pk=pk)
@@ -260,34 +260,32 @@ class LearnedCreateDestroyView(ButtonCreateDestroyView):
         return Learned
 
 ####ここからコンテストの実装###
-@csrf_exempt # テスト用、実際は外す必要あり
-@api_view(["GET","POST","Update","Delete"])
-def contest(request):
-    contests=Contest.objects.all()
-    if request.method=="GET":
-        serializer_get = ContestSerializer(contests, many=True)
-        contest_serializers = serializer_get.data
-        contests=[]
-        for contest_serializer in contest_serializers:
-            contest_serializer["contest_id"]=contest_serializer.pop("id")
-            contests.append(contest_serializer)
-        return Response({"contests": contests})
-    
-    if request.method=="POST":
-        data=request.data.copy()
-        serializer_contest = ContestSerializer(data=data)  # シリアライザをデータとともにインスタンス化
-        if serializer_contest.is_valid():  # データの検証
-            serializer_contest.save()  # データの保存
-            data=serializer_contest.data
-            return JsonResponse({"message": "success"}, status=201)
-        return JsonResponse(serializer_contest.errors, status=400)
-    
-    if request.method=="DELETE":
-        delete_room=request.data.copy()     #削除したポスト
-        serializer=PostSerializer(data=delete_room)
-        if serializer.is_valid():    #データ検証
-            return JsonResponse({"message":"success"},status=201)
-        return JsonResponse(serializer.errors,status=400)
+class ContestAPIView(generics.GenericAPIView):
+    serializer_class = ContestSerializer
+    queryset = Contest.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        contests = self.get_queryset()
+        serializer = self.get_serializer(contests, many=True)
+        contest_data = []
+        for contest in serializer.data:
+            contest["contest_id"] = contest.pop("id")
+            contest_data.append(contest)
+        return Response({"contests": contest_data})
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "success"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+
+            return Response({"message": "success"}, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["GET","POST","Update","Delete"])
