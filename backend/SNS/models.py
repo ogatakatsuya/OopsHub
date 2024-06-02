@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class User(models.Model):
     id = models.CharField(max_length=100, primary_key=True)
     name=models.CharField(max_length=100, default='匿名ユーザー')
@@ -13,7 +12,6 @@ class User(models.Model):
 class Post(models.Model):
     content=models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # user=models.CharField(max_length=100)
     created_at=models.CharField(max_length=100)
     def __str__(self):
         return self.content
@@ -28,7 +26,6 @@ class Contest(models.Model):
 class Contest_Post(models.Model):
     contest_id=models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # user=models.CharField(max_length=100)
     message=models.CharField(max_length=100)
     created_at=models.CharField(max_length=100)
     def __str__(self):
@@ -42,7 +39,6 @@ class AISolution(models.Model):
         return self.content
 
 class Button(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     user=models.CharField(max_length=100)
     class Meta:
         abstract = True
@@ -64,10 +60,10 @@ class DontMind(Button):
 class Vote(Button):
     post = models.ForeignKey(Contest_Post, on_delete=models.CASCADE,related_name='votes')
     def __str__(self):
-        return f'{self.user} cheeruped {self.post}'
+        return f'{self.user} voted {self.post}'
  
 class Learned(Button):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='learneds')
     def __str__(self):
-        return f'{self.user} Learned from {self.post}' # 文法合ってる？
+        return f'{self.user} Learned from {self.post}' 
     
