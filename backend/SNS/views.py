@@ -91,33 +91,36 @@ class PostGETPOSTView(generics.GenericAPIView):
             return Response({"message": "Success!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt # テスト用、実際は外す必要あり
-@api_view(["PUT","DELETE"])
-def App_modify(request,pk):
-    try:
-        post = Post.objects.get(pk=pk)
-    except Post.DoesNotExist:
-        return JsonResponse({'error': 'Post not found'}, status=404)
-    
-    if request.method=="PUT":
-        data = request.data.copy()  # リクエストデータのコピーを作成
-        # カラム名を変更
+class PostModifyView(generics.GenericAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def put(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        try:
+            post = self.get_queryset().get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data.copy()
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
         data['content'] = data.pop('text', None)
-        serializer = PostSerializer(post,data=data)  # シリアライザをデータとともにインスタンス化
+
+        serializer = self.get_serializer(post, data=data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({"message": "success!"})
-        return JsonResponse(serializer.errors, status=400)
-    
-    if request.method == "DELETE":
+            return Response({"message": "success!"})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
         try:
-            delete_post = Post.objects.get(pk=pk)
-            delete_post.delete()
-            return JsonResponse({"message": "success!"}, status=204)
+            post = self.get_queryset().get(pk=pk)
+            post.delete()
+            return Response({"message": "success!"}, status=status.HTTP_204_NO_CONTENT)
         except Post.DoesNotExist:
-            return JsonResponse({'error': 'Post not found'}, status=404)
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
 
 ###AIとのやり取り###
 class LLMView(generics.GenericAPIView):

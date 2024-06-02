@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.hello),
     path('post/',views.PostGETPOSTView.as_view(),name="Application"),
-    path("post/<int:pk>",views.App_modify,name="modify_app"),
+    path("post/<int:pk>",views.PostModifyView.as_view(),name="modify_app"),
     path("contest/",views.contest,name="contest"),
     path("contest/<int:contest_id>",views.ContestDeleteView.as_view(),name="contest-delete"),
     path("contest/<int:contest_id>/post",views.contestroom,name="contestroom"),
