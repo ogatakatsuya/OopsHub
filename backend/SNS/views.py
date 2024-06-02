@@ -1,21 +1,16 @@
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
 from rest_framework import generics
 from SNS.models import User, Post, Like,Contest,Contest_Post
-import json
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Post, Like, DontMind, Learned,Vote, AISolution
+from .models import Post, Like, DontMind, Learned,Vote
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer, UserSerializer
-import os
-from dotenv import load_dotenv
 from litellm import completion
-import time
 from django.utils import timezone
 
 def hello(request: WSGIRequest) -> JsonResponse:
