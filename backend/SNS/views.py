@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework import generics
 from SNS.models import User, Post, Like,Contest,Contest_Post
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
