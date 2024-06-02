@@ -1,7 +1,5 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
 from rest_framework import generics
 from SNS.models import User, Post, Like,Contest,Contest_Post
 from django.shortcuts import get_object_or_404
