@@ -5,7 +5,7 @@ from .views import LikeCreateDestroyView, DontMindCreateDestroyView,LearnedCreat
 
 urlpatterns = [
     path('', views.hello),
-    path('post/',views.App,name="Application"),
+    path('post/',views.PostView.as_view(),name="Post_get_post"),
     path("post/<int:pk>",views.App_modify,name="modify_app"),
     path("contest/",views.contest,name="contest"),
     path("contest/<int:contest_id>",ContestDeleteView.as_view(),name="contest-delete"),
