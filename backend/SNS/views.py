@@ -2,23 +2,31 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from rest_framework import generics
 from SNS.models import User, Post, Like,Contest,Contest_Post
+import json
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
-from .models import Post, Like, DontMind, Learned,Vote
+from .models import Post, Like, DontMind, Learned,Vote, AISolution
 from .serializers import PostSerializer, LikeSerializer, DontMindSerializer, ContestSerializer,PostListSerializer,Contest_PostSerializer,AISolutionSerializer,VoteSerializer, UserSerializer
+import os
+from dotenv import load_dotenv
 from litellm import completion
+import time
 from django.utils import timezone
 
 def hello(request: WSGIRequest) -> JsonResponse:
     return JsonResponse({"message": "Hello world from Django!"})
 
-class SignUpView(generics .GenericAPIView):
 
-    def get(self, request, *args, **kwargs):
+### CRUD機能 ###
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["PUT","DELETE","GET","POST"])
+def signup(request):
+    """ユーザー登録"""
+    if request.method=="GET":
         return Response({"message": "View success"})
-    
-    def post(self, request, *args, **kwargs):
+    if request.method=="PUT":
         data=request.data.copy()
         user_id = data["user_id"]
         user, created = User.objects.get_or_create(id=user_id, defaults={
@@ -40,77 +48,98 @@ class SignUpView(generics .GenericAPIView):
         else:
             return Response({"message": "fail", "error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
-class PostView(generics .GenericAPIView):
-
-    def get(self, request):
-        posts = Post.objects.all()
-        serializer = PostListSerializer(posts, many=True)
-        data = serializer.data
-        for post in data:
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["GET","POST","Update","Delete"])
+def App(request):
+    posts=Post.objects.all()
+    
+    if request.method=="GET":
+        serializer_get = PostListSerializer(posts, many=True)
+        posts = serializer_get.data
+        for post in posts:
             post['text'] = post.pop('content', None)
             post['dontminds'] = post.pop('dont_minds', None)
-        return Response({"message": data})
-
-    def post(self, request):
-        data = request.data.copy()  # Create a copy of request data
-        user_id = data.get('user_id')
+        return Response({"message": posts})
+    
+    if request.method=="POST":
+        data = request.data.copy()  # リクエストデータのコピーを作成
+        # カラム名を変更
+        user_id = data['user_id']
         data['created_at'] = data.pop('date', None)
-        data['content'] = data.pop('text', None)
-        solution_content = data.pop('solution', None)
-
-        user, created = User.objects.get_or_create(
-            id=user_id, 
-            defaults={
-                'name': '匿名ユーザー',  # Default username
-                'password': 'defaultpassword',  # Default password
-                'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # Set current date and time
-            }
-        )
-        data['user'] = user.id
-        post_serializer = PostSerializer(data=data)
-        
-        if post_serializer.is_valid():
-            post = post_serializer.save()
-            if solution_content:
-                solution_data = {'content': solution_content, 'post': post.id}
-                solution_serializer = AISolutionSerializer(data=solution_data)
-                if solution_serializer.is_valid():
-                    solution_serializer.save()
-                else:
-                    return Response(solution_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"message": "Success!", "solution": solution_content}, status=status.HTTP_201_CREATED)
-        return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class PostModificationView(generics .GenericAPIView):
-    """
-    API view to handle updating and deleting posts.
-    """
-
-    def put(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        data = request.data.copy()  # Create a copy of request data
-        data['created_at'] = data.pop('date', None)
-        data['content'] = data.pop('text', None)
         data['user'] = data.pop('user_id', None)
+        data['content'] = data.pop('text', None)
+        solution_content = data['solution']
+        user, created = User.objects.get_or_create(id=user_id, defaults={
+        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
+        'password': 'defaultpassword',  # デフォルトのパスワード
+        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
+    })                               
+        data['user'] = user.id
+        serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
+        if serializer_post.is_valid():  # データの検証
+            post = serializer_post.save()  # データの保存
+            # solutionデータがある場合は、AISolutionとして保存
+            if solution_content is not None:
+                solution_data = {'content': solution_content, 'post': post.id}
+                serializer_solution = AISolutionSerializer(data=solution_data)
+                if serializer_solution.is_valid():
+                    serializer_solution.save()  # AISolutionデータの保存
+                else:
+                    return JsonResponse(serializer_solution.errors, status=400)
+            return JsonResponse({"message": "Success!","solution":solution_content}, status=201)
+        return JsonResponse(serializer_post.errors, status=400)
+        
+    if request.method=="PUT":
+        data = request.data.copy()  # リクエストデータのコピーを作成
+        # カラム名を変更
+        data['updated_at'] = data.pop('date', None)
+        data['user'] = data.pop('user_id', None)
+        data['content'] = data.pop('text', None)
+        fixed_post=data
+        pre_post=None
+        for post in posts:
+            if post.id==fixed_post.id:
+                pre_post=post
+                break
+        serializer=PostSerializer(pre_post,data=fixed_post)
+        if serializer.is_valid():
+            return JsonResponse({"message":"success!"})
+        return JsonResponse(serializer.errors,status=400)
+    
+    if request.method=="DELETE":
+        delete_post=request.data     #削除したポスト
+        serializer=PostSerializer(data=delete_post)
+        if serializer.is_valid():    #データ検証
+            return JsonResponse({"message":"success!"},status=201)
+        return JsonResponse(serializer.errors,status=400)
 
-        serializer = PostSerializer(post, data=data)
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["PUT","DELETE"])
+def App_modify(request,pk):
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return JsonResponse({'error': 'Post not found'}, status=404)
+    
+    if request.method=="PUT":
+        data = request.data.copy()  # リクエストデータのコピーを作成
+        # カラム名を変更
+        data['created_at'] = data.pop('date', None)
+        data['user'] = data.pop('user_id', None)
+        data['content'] = data.pop('text', None)
+        serializer = PostSerializer(post,data=data)  # シリアライザをデータとともにインスタンス化
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "success!"})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
+            return JsonResponse({"message": "success!"})
+        return JsonResponse(serializer.errors, status=400)
+    
+    if request.method == "DELETE":
         try:
-            post = Post.objects.get(pk=pk)
-            post.delete()
-            return Response({"message": "success!"}, status=status.HTTP_204_NO_CONTENT)
+            delete_post = Post.objects.get(pk=pk)
+            delete_post.delete()
+            return JsonResponse({"message": "success!"}, status=204)
         except Post.DoesNotExist:
-            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse({'error': 'Post not found'}, status=404)
 
 ###AIとのやり取り###
 class LLMView(generics.GenericAPIView):
@@ -258,79 +287,67 @@ class LearnedCreateDestroyView(ButtonCreateDestroyView):
         return Learned
 
 ####ここからコンテストの実装###
-class ContestView(generics.GenericAPIView):
-    serializer_class = ContestSerializer
-    queryset = Contest.objects.all()
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["GET","POST","Update","Delete"])
+def contest(request):
+    contests=Contest.objects.all()
+    if request.method=="GET":
+        serializer_get = ContestSerializer(contests, many=True)
+        contest_serializers = serializer_get.data
+        contests=[]
+        for contest_serializer in contest_serializers:
+            contest_serializer["contest_id"]=contest_serializer.pop("id")
+            contests.append(contest_serializer)
+        return Response({"contests": contests})
+    
+    if request.method=="POST":
+        data=request.data.copy()
+        serializer_contest = ContestSerializer(data=data)  # シリアライザをデータとともにインスタンス化
+        if serializer_contest.is_valid():  # データの検証
+            serializer_contest.save()  # データの保存
+            data=serializer_contest.data
+            return JsonResponse({"message": "success"}, status=201)
+        return JsonResponse(serializer_contest.errors, status=400)
+    
+    if request.method=="DELETE":
+        delete_room=request.data.copy()     #削除したポスト
+        serializer=PostSerializer(data=delete_room)
+        if serializer.is_valid():    #データ検証
+            return JsonResponse({"message":"success"},status=201)
+        return JsonResponse(serializer.errors,status=400)
 
-    def get(self, request, *args, **kwargs):
-        contests = self.get_queryset()
-        serializer = self.get_serializer(contests, many=True)
-        contest_data = []
-        for contest in serializer.data:
-            contest["contest_id"] = contest.pop("id")
-            contest_data.append(contest)
-        return Response({"contests": contest_data})
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+@csrf_exempt # テスト用、実際は外す必要あり
+@api_view(["GET","POST","Update","Delete"])
+def contestroom(request,contest_id):
+    try:
+        contest = Contest.objects.get(id=contest_id)
+    except Post.DoesNotExist:
+        return JsonResponse({'error': 'Contest not found'}, status=404)
+    
+    contest_posts=Contest_Post.objects.filter(contest_id=contest_id).all().order_by("-id")#古い順に並べてある
+    if request.method=="GET":
+        serializer=Contest_PostSerializer(contest_posts,many=True)
+        contest_posts=serializer.data
+        return JsonResponse({"message":contest_posts,"title":contest.name,"created_at":contest.created_at,"deadline":contest.deadline})
+    
+    if request.method=="POST":
+        data=request.data.copy()
+        data["contest_id"]=contest_id
+        data["message"]=data.pop('text', None)
+        data["user"]=data.get("user_id")
+        data["created_at"]=data.get("created_at")
+        user_id = data.get("user_id")
+        user, created = User.objects.get_or_create(id=user_id, defaults={
+        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
+        'password': 'defaultpassword',  # デフォルトのパスワード
+        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
+    })            
+        serializer=Contest_PostSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "success"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-
-            return Response({"message": "success"}, status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class ContestRoomView(generics.GenericAPIView):
-    serializer_class = Contest_PostSerializer
-
-    def get_queryset(self):
-        contest_id = self.kwargs.get('contest_id')
-        return Contest_Post.objects.filter(contest_id=contest_id).order_by("-id")
-
-    def get(self, request, contest_id):
-        try:
-            contest = Contest.objects.get(id=contest_id)
-        except Contest.DoesNotExist:
-            return Response({'error': 'コンテストが見つかりません'}, status=status.HTTP_404_NOT_FOUND)
-        
-        contest_posts = self.get_queryset()
-        serializer = self.get_serializer(contest_posts, many=True)
-        return Response({
-            "message": serializer.data,
-            "title": contest.name,
-            "created_at": contest.created_at,
-            "deadline": contest.deadline
-        })
-
-    def post(self, request, contest_id):
-        try:
-            contest = Contest.objects.get(id=contest_id)
-        except Contest.DoesNotExist:
-            return Response({'error': 'コンテストが見つかりません'}, status=status.HTTP_404_NOT_FOUND)
-
-        data = request.data.copy()
-        data["contest_id"] = contest_id
-        data["message"] = data.pop('text', None)
-        data["user"] = data.get("user_id")
-        user_id = data.get("user_id")
-        user, created = User.objects.get_or_create(
-            id=user_id,
-            defaults={
-                'name': '匿名ユーザー',  # デフォルトのユーザー名
-                'password': 'defaultpassword',  # デフォルトのパスワード
-                'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
-            }
-        )
-        serializer = self.get_serializer(data=data)
-        if serializer.is_valid():
-            saved_post = serializer.save()
-            return Response({"message": "投稿が作成されました：{}".format(saved_post.created_at)}, status=status.HTTP_201_CREATED)
-        return Response({"error": "投稿が無効です", "data": data, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            data=serializer.data
+            return Response({"message":data["created_at"]})
+        return JsonResponse({"error":"contest is not valid","data":data,"errors": serializer.errors})
 
 
 class PostDeleteView(generics.GenericAPIView):    
