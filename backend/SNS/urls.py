@@ -3,11 +3,11 @@ from . import views
 
 urlpatterns = [
     path('', views.hello),
-    path('post/',views.App,name="Application"),
-    path("post/<int:pk>",views.App_modify,name="modify_app"),
-    path("contest/",views.contest,name="contest"),
+    path('post/',views.PostGETPOSTView.as_view(),name="postGETPOST"),
+    path("post/<int:pk>",views.PostModifyView.as_view(),name="postModify"),
+    path("contest/",views.ContestView.as_view(),name="contest"),
     path("contest/<int:contest_id>",views.ContestDeleteView.as_view(),name="contest-delete"),
-    path("contest/<int:contest_id>/post",views.contestroom,name="contestroom"),
+    path("contest/<int:contest_id>/post",views.ContestRoomView.as_view(),name="contestroom"),
     path("name",views.SignUpView.as_view(),name="signup"),
     path("contest/<int:contest_id>/post/<int:post_id>",views.PostDeleteView.as_view(),name="delete-post"),
     path("contest/<int:post_id>/vote",views.VoteCreateDestroyView.as_view(),name="vote-create"),
