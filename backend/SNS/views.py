@@ -47,70 +47,49 @@ class SignUpView(generics.GenericAPIView):
             return Response({"message": "fail", "error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 ### CRUD機能 ### 
-@csrf_exempt # テスト用、実際は外す必要あり
-@api_view(["GET","POST","Update","Delete"])
-def App(request):
-    posts=Post.objects.all()
-    
-    if request.method=="GET":
-        serializer_get = PostListSerializer(posts, many=True)
-        posts = serializer_get.data
-        for post in posts:
+class PostGETPOSTView(generics.GenericAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        posts = self.get_queryset()
+        serializer = PostListSerializer(posts, many=True)
+        data = serializer.data
+        for post in data:
             post['text'] = post.pop('content', None)
             post['dontminds'] = post.pop('dont_minds', None)
-        return Response({"message": posts})
-    
-    if request.method=="POST":
-        data = request.data.copy()  # リクエストデータのコピーを作成
-        # カラム名を変更
+        return Response({"message": data})
+
+    def post(self, request, *args, **kwargs):
+        data = request.data.copy()
         user_id = data['user_id']
         data['created_at'] = data.pop('date', None)
         data['user'] = data.pop('user_id', None)
         data['content'] = data.pop('text', None)
-        solution_content = data['solution']
-        user, created = User.objects.get_or_create(id=user_id, defaults={
-        'name': '匿名ユーザー',  # ユーザー名のデフォルト値
-        'password': 'defaultpassword',  # デフォルトのパスワード
-        'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')  # 現在の日時を設定
-    })                               
-        data['user'] = user.id
-        serializer_post = PostSerializer(data=data)  # シリアライザをデータとともにインスタンス化
-        if serializer_post.is_valid():  # データの検証
-            post = serializer_post.save()  # データの保存
-            # solutionデータがある場合は、AISolutionとして保存
-            if solution_content is not None:
-                solution_data = {'content': solution_content, 'post': post.id}
-                serializer_solution = AISolutionSerializer(data=solution_data)
-                if serializer_solution.is_valid():
-                    serializer_solution.save()  # AISolutionデータの保存
-                else:
-                    return JsonResponse(serializer_solution.errors, status=400)
-            return JsonResponse({"message": "Success!","solution":solution_content}, status=201)
-        return JsonResponse(serializer_post.errors, status=400)
+        solution_content = data.pop('solution', None)
         
-    if request.method=="PUT":
-        data = request.data.copy()  # リクエストデータのコピーを作成
-        # カラム名を変更
-        data['updated_at'] = data.pop('date', None)
-        data['user'] = data.pop('user_id', None)
-        data['content'] = data.pop('text', None)
-        fixed_post=data
-        pre_post=None
-        for post in posts:
-            if post.id==fixed_post.id:
-                pre_post=post
-                break
-        serializer=PostSerializer(pre_post,data=fixed_post)
+        user, created = User.objects.get_or_create(
+            id=user_id,
+            defaults={
+                'name': '匿名ユーザー',
+                'password': 'defaultpassword',
+                'created_at': timezone.now().strftime('%Y/%m/%d %H:%M:%S')
+            }
+        )
+        data['user'] = user.id
+        serializer = self.get_serializer(data=data)
+        
         if serializer.is_valid():
-            return JsonResponse({"message":"success!"})
-        return JsonResponse(serializer.errors,status=400)
-    
-    if request.method=="DELETE":
-        delete_post=request.data     #削除したポスト
-        serializer=PostSerializer(data=delete_post)
-        if serializer.is_valid():    #データ検証
-            return JsonResponse({"message":"success!"},status=201)
-        return JsonResponse(serializer.errors,status=400)
+            post = serializer.save()
+            if solution_content:
+                solution_data = {'content': solution_content, 'post': post.id}
+                solution_serializer = AISolutionSerializer(data=solution_data)
+                if solution_serializer.is_valid():
+                    solution_serializer.save()
+                    return Response({"message": "Success!", "solution": solution_content}, status=status.HTTP_201_CREATED)
+                return Response(solution_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Success!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt # テスト用、実際は外す必要あり
 @api_view(["PUT","DELETE"])

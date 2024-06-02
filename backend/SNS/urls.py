@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.hello),
-    path('post/',views.App,name="Application"),
+    path('post/',views.PostGETPOSTView.as_view(),name="Application"),
     path("post/<int:pk>",views.App_modify,name="modify_app"),
     path("contest/",views.contest,name="contest"),
     path("contest/<int:contest_id>",views.ContestDeleteView.as_view(),name="contest-delete"),
